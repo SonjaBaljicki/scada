@@ -1,8 +1,0 @@
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\obj\Debug\DatabaseManager.csproj.AssemblyReference.cache
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\obj\Debug\DatabaseManager.csproj.SuggestedBindingRedirects.cache
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\obj\Debug\DatabaseManager.csproj.CoreCompileInputs.cache
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\bin\Debug\DatabaseManager.exe.config
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\bin\Debug\DatabaseManager.exe
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\bin\Debug\DatabaseManager.pdb
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\obj\Debug\DatabaseManager.exe
-C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\DatabaseManager\obj\Debug\DatabaseManager.pdb

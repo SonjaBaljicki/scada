@@ -10,7 +10,7 @@ namespace DatabaseManager
         {
             string input = "";
             while (input != "exit")
-            {
+            { 
                 Console.WriteLine("\n\n");
                 Console.WriteLine("Choose an option by entering a number or 'exit' to exit:");
                 Console.WriteLine("1. Log in");
