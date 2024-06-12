@@ -1,0 +1,12 @@
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\ScadaCore.dll.config
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\ScadaCore.dll
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\ScadaCore.pdb
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\EntityFramework.dll
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\EntityFramework.SqlServer.dll
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\EntityFramework.xml
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\bin\EntityFramework.SqlServer.xml
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\obj\Debug\ScadaCore.csproj.AssemblyReference.cache
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\obj\Debug\ScadaCore.csproj.CoreCompileInputs.cache
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\obj\Debug\ScadaCore.csproj.CopyComplete
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\obj\Debug\ScadaCore.dll
+C:\Users\computer\Desktop\Faks\6. semestar\Softver nadzorno upravljackih sistema\scada\ScadaCore\ScadaCore\obj\Debug\ScadaCore.pdb
