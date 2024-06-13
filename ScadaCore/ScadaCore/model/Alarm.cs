@@ -17,15 +17,18 @@ namespace ScadaCore.model
         [DataMember]
         public int Priority { get; set; }
         [DataMember]
-        public double Value { get; set; }
+        public double EdgeValue { get; set; }
+        [DataMember]
+        public string UnitsName { get; set; }
         public Alarm() { }
 
-        public Alarm(int id, AlarmType type, int priority, double value)
+        public Alarm(int id, AlarmType type, int priority, double value, string units)
         {
             Id = id;
             Type = type;
             Priority = priority;
-            Value = value;
+            EdgeValue = value;
+            UnitsName = units;
         }
     }
 }

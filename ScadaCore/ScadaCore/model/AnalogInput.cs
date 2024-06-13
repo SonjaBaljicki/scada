@@ -7,6 +7,8 @@ using System.Web;
 namespace ScadaCore.model
 {
     [DataContract]
+    [KnownType(typeof(List<Alarm>))]
+    [KnownType(typeof(Alarm))]
     public class AnalogInput:Tag
     {
         [DataMember]
@@ -23,11 +25,11 @@ namespace ScadaCore.model
         [DataMember]
         public int HighLimit { get; set; }
         [DataMember]
-        public int Units { get; set; }
+        public string UnitsName { get; set; }
 
         public AnalogInput() { }
 
-        public AnalogInput(string tagName, string description, string address,int driver, int scanTime, bool scanOn, List<Alarm> alarms, int lowLimit, int highLimit, int units)
+        public AnalogInput(string tagName, string description, string address,int driver, int scanTime, bool scanOn, List<Alarm> alarms, int lowLimit, int highLimit, string units)
         {
             TagName = tagName;
             Description = description;
@@ -38,7 +40,7 @@ namespace ScadaCore.model
             Alarms = alarms;
             LowLimit = lowLimit;
             HighLimit = highLimit;
-            Units = units;
+            UnitsName = units;
         }
     }
 }

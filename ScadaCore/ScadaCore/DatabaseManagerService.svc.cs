@@ -1,53 +1,43 @@
 ﻿using ScadaCore.model;
+using ScadaCore.processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.ServiceModel;
 using System.Text;
+using System.Web.UI.WebControls;
 
 namespace ScadaCore
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the class name "DatabaseManagerService" in code, svc and config file together.
-    // NOTE: In order to launch WCF Test Client for testing this service, please select DatabaseManagerService.svc or DatabaseManagerService.svc.cs at the Solution Explorer and start debugging.
     public class DatabaseManagerService : IDatabaseManagerService
     {
 
         private static Dictionary<string, User> authenticatedUsers = new Dictionary<string, User>();
+        public static Dictionary<string, Tag> inputTags = new Dictionary<string, Tag>();
+        public static Dictionary<string, Tag> outputTags = new Dictionary<string, Tag>();
 
         public bool Registration(string username, string password)
         {
             string encryptedPassword = EncryptData(password);
             User user = new User(username, encryptedPassword);
-            using (var db = new DatabaseContext())
-            {
-                try
-                {
-                    db.users.Add(user);
-                    db.SaveChanges();
-                }
-                catch (Exception e)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return UserProcessing.AddUser(user);
         }
         public string Login(string username, string password)
         {
-            using (var db = new DatabaseContext())
+            List<User> users = UserProcessing.GetAllUsers();
+            foreach (var user in users)
             {
-                foreach (var user in db.users)
+                if (username == user.Username && ValidateEncryptedData(password, user.EncryptedPassword))
                 {
-                    if (username == user.Username &&
-                   ValidateEncryptedData(password, user.EncryptedPassword))
-                    {
-                        string token = GenerateToken(username);
-                        authenticatedUsers.Add(token, user);
-                        return token;
-                    }
+                    string token = GenerateToken(username);
+                    authenticatedUsers.Add(token, user);
+                    return token;
                 }
+
             }
             return "Login failed";
         }
@@ -112,6 +102,178 @@ namespace ScadaCore
                 return false;
             }
 
+        }
+
+        public static bool ContainsTag(string name)
+        {
+            if (inputTags.ContainsKey(name) || outputTags.ContainsKey(name))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn)
+        {
+            if (ContainsTag(name))
+            {
+                return false;
+            }
+            DigitalInput tag = new DigitalInput(name, description, driver, address, scanTime, scanOn);
+            inputTags[name] = tag;
+            return true;
+        }
+
+        public bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units)
+        {
+            if (ContainsTag(name))
+            {
+                return false;
+            }
+            AnalogInput tag = new AnalogInput(name, description, address, driver, scanTime, scanOn,new List<Alarm>(),lowLimit,hightLimit,units);
+            inputTags[name] = tag;
+            return true;
+        }
+
+        public bool AddDigitalOutputTag(string name, string description, string address, int initialValue)
+        {
+            if (ContainsTag(name))
+            {
+                return false;
+            }
+            DigitalOutput tag = new DigitalOutput(name, description, address,initialValue);
+            outputTags[name] = tag;
+            TagProcessing.AddDigitalOutputTag(tag,initialValue);
+            return true;
+        }
+
+        public bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units)
+        {
+            if (ContainsTag(name))
+            {
+                return false;
+            }
+            AnalogOutput tag = new AnalogOutput(name, description, address, initialValue,lowLimit,hightLimit,units);
+            outputTags[name] = tag;
+            TagProcessing.AddAnalogOutputTag(tag, initialValue);
+            return true;
+        }
+
+        public bool TurnOnScan(string name)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+            Tag tag = inputTags[name];
+            if(tag is DigitalInput)
+            {
+                DigitalInput digitalInput = (DigitalInput)tag;
+                digitalInput.ScanOn = true;
+            }
+            else
+            {
+                AnalogInput analogInput = (AnalogInput)tag;
+                analogInput.ScanOn = true;
+            }
+            return true;
+            
+        }
+
+        public bool TurnOffScan(string name)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+            Tag tag = inputTags[name];
+            if (tag is DigitalInput)
+            {
+                DigitalInput digitalInput = (DigitalInput)tag;
+                digitalInput.ScanOn = false;
+            }
+            else
+            {
+                AnalogInput analogInput = (AnalogInput)tag;
+                analogInput.ScanOn = false;
+            }
+            return true;
+        }
+
+        public bool RemoveInputTag(string name)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+            inputTags.Remove(name);
+            return true;
+        }
+
+        public bool RemoveOutputTag(string name)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+            outputTags.Remove(name);
+            return true;
+        }
+
+        public Dictionary<string, double> GetDigitalOutputTags()
+        {
+            Dictionary<string, double>digitalTags=new Dictionary<string, double>();
+            foreach(Tag tag in outputTags.Values)
+            {
+                if(tag is DigitalOutput)
+                {
+                    DigitalOutput digitalOutput = (DigitalOutput)tag;
+                    digitalTags[digitalOutput.TagName] = digitalOutput.Value;
+                }
+            }
+            return digitalTags;
+        }
+
+        public Dictionary<string, double> GetAnalogOutputTags()
+        {
+            Dictionary<string, double> analoglTags = new Dictionary<string, double>();
+            foreach (Tag tag in outputTags.Values)
+            {
+                if (tag is AnalogOutput)
+                {
+                    AnalogOutput analogOutput = (AnalogOutput)tag;
+                    analoglTags[analogOutput.TagName] = analogOutput.Value;
+                }
+            }
+            return analoglTags;
+        }
+
+        public bool ChangeValueDigitalOutputTag(string name, int newValue)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+           
+            Tag tag=outputTags[name];
+            DigitalOutput digitalOutput = (DigitalOutput)tag;
+            digitalOutput.Value = newValue;
+            TagProcessing.AddDigitalOutputTag(digitalOutput, newValue);
+            return true;
+        }
+
+        public bool ChangeValueAnalogOutputTag(string name, int newValue)
+        {
+            if (!ContainsTag(name))
+            {
+                return false;
+            }
+
+            Tag tag = outputTags[name];
+            AnalogOutput analogOutput = (AnalogOutput)tag;
+            analogOutput.Value = newValue;
+            TagProcessing.AddAnalogOutputTag(analogOutput, newValue);
+            return true;
         }
     }
 }

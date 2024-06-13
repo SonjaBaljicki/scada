@@ -11,25 +11,25 @@ namespace ScadaCore.model
     public class AnalogOutput:Tag
     {
         [DataMember]
-        public int InitialValue { get; set; }
+        public int Value { get; set; }
         [DataMember]
         public int LowLimit { get; set; }
         [DataMember]
         public int HighLimit { get; set; }
         [DataMember]
-        public int Units { get; set; }
+        public string UnitsName { get; set; }
 
         public AnalogOutput() { }
 
-        public AnalogOutput(string tagName, string description,string address,int initialValue, int lowLimit, int highLimit, int units)
+        public AnalogOutput(string tagName, string description,string address,int initialValue, int lowLimit, int highLimit, string units)
         {
             TagName = tagName;
             Description = description;
             Address = address;
-            InitialValue = initialValue;
+            Value = initialValue;
             LowLimit = lowLimit;
             HighLimit = highLimit;
-            Units = units;
+            UnitsName = units;
         }
 
     }

@@ -11,7 +11,7 @@ namespace ScadaCore.model
     public class DigitalOutput:Tag
     {
         [DataMember]
-        public int InitialValue { get; set; }
+        public int Value { get; set; }   //0 is off and 1 is on
 
         public DigitalOutput() { }
 
@@ -20,10 +20,13 @@ namespace ScadaCore.model
             TagName = tagName;
             Description = description;
             Address = address;
-            InitialValue = value;
+            Value = value;
             
         }
-
+        public bool IsTurnedOn()
+        {
+            return Value == 1;
+        }
 
     }
 }
