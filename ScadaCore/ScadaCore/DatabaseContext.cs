@@ -10,5 +10,7 @@ namespace ScadaCore
     public class DatabaseContext : DbContext
     {
         public DbSet<User> users { get; set; }
+        public DbSet<AlarmEntity> alarms { get; set; }
+        public DbSet<TagEntity> tags { get; set; }
     }
 }

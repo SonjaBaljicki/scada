@@ -7,7 +7,6 @@ using System.Text;
 
 namespace ScadaCore
 {
-    // NOTE: You can use the "Rename" command on the "Refactor" menu to change the interface name "IDatabaseManagerService" in both code and config file together.
     [ServiceContract]
     public interface IDatabaseManagerService
     {
@@ -19,5 +18,29 @@ namespace ScadaCore
         bool LogOut(string token);
         [OperationContract]
         bool DatabaseEmpty();
+        [OperationContract]
+        bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn);
+        [OperationContract]
+        bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units);
+        [OperationContract]
+        bool AddDigitalOutputTag(string name, string description, string address, int initialValue);
+        [OperationContract]
+        bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units);
+        [OperationContract]
+        bool TurnOnScan(string name);
+        [OperationContract]
+        bool TurnOffScan(string name);
+        [OperationContract]
+        bool RemoveInputTag(string name);
+        [OperationContract]
+        bool RemoveOutputTag(string name);
+        [OperationContract]
+        Dictionary<string, double> GetDigitalOutputTags();
+        [OperationContract]
+        Dictionary<string, double> GetAnalogOutputTags();
+        [OperationContract]
+        bool ChangeValueDigitalOutputTag(string name, int newValue);
+        [OperationContract]
+        bool ChangeValueAnalogOutputTag(string name, int newValue);
     }
 }
