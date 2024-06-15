@@ -12,5 +12,17 @@ namespace ScadaCore
         public DbSet<User> users { get; set; }
         public DbSet<AlarmEntity> alarms { get; set; }
         public DbSet<TagEntity> tags { get; set; }
+
+        public DatabaseContext() : base("name=DefaultConnection")
+        {
+        }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+        }
     }
 }

@@ -22,6 +22,7 @@
     <MetadataSource Address="http://localhost:49357/DatabaseManagerService.svc" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
+    <MetadataFile FileName="DatabaseManagerService2.xsd" MetadataType="Schema" ID="19dbd007-1ed3-45ba-b5ad-d6950a4fa863" SourceId="1" SourceUrl="http://localhost:49357/DatabaseManagerService.svc?xsd=xsd2" />
     <MetadataFile FileName="DatabaseManagerService.xsd" MetadataType="Schema" ID="2adb083f-0bb2-478a-b14a-960228d946a7" SourceId="1" SourceUrl="http://localhost:49357/DatabaseManagerService.svc?xsd=xsd0" />
     <MetadataFile FileName="DatabaseManagerService.wsdl" MetadataType="Wsdl" ID="e5acdf82-6746-4ee7-8719-96ec7edcd1a4" SourceId="1" SourceUrl="http://localhost:49357/DatabaseManagerService.svc?wsdl" />
     <MetadataFile FileName="DatabaseManagerService1.xsd" MetadataType="Schema" ID="d496d0ed-9212-4cc4-b556-1204c6611a1a" SourceId="1" SourceUrl="http://localhost:49357/DatabaseManagerService.svc?xsd=xsd1" />
