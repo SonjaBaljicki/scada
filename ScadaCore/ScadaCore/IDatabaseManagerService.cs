@@ -48,9 +48,9 @@ namespace ScadaCore
         [OperationContract]
         bool RemoveOutputTag(string name);
         [OperationContract]
-        Dictionary<string, double> GetDigitalOutputTags();
+        Dictionary<string, int> GetDigitalOutputTags();
         [OperationContract]
-        Dictionary<string, double> GetAnalogOutputTags();
+        Dictionary<string, int> GetAnalogOutputTags();
         [OperationContract]
         bool ChangeValueDigitalOutputTag(string name, int newValue);
         [OperationContract]

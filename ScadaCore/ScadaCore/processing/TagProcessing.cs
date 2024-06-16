@@ -42,6 +42,33 @@ namespace ScadaCore.processing
             return false;
         }
 
+        public static bool ContainsDigitalInputTag(string name)
+        {
+            if (inputTags.ContainsKey(name) && inputTags[name] is DigitalInput)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsAnalogOutputTag(string name)
+        {
+            if (outputTags.ContainsKey(name) && outputTags[name] is AnalogOutput)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsDigitalOutputTag(string name)
+        {
+            if (outputTags.ContainsKey(name) && outputTags[name] is DigitalOutput)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static bool ContainsTag(string name)
         {
             if (inputTags.ContainsKey(name) || outputTags.ContainsKey(name))
@@ -105,7 +132,6 @@ namespace ScadaCore.processing
             }
             DigitalOutput tag = new DigitalOutput(name, description, address, initialValue);
             outputTags[name] = tag;
-            TagProcessing.AddDigitalOutputTag(tag, initialValue);
             return true;
         }
 
@@ -117,7 +143,6 @@ namespace ScadaCore.processing
             }
             AnalogOutput tag = new AnalogOutput(name, description, address, initialValue, lowLimit, hightLimit, units);
             outputTags[name] = tag;
-            AddAnalogOutputTag(tag, initialValue);
             return true;
         }
 
@@ -189,9 +214,9 @@ namespace ScadaCore.processing
             return true;
         }
 
-        public static Dictionary<string, double> GetDigitalOutputTags()
+        public static Dictionary<string, int> GetDigitalOutputTags()
         {
-            Dictionary<string, double> digitalTags = new Dictionary<string, double>();
+            Dictionary<string, int> digitalTags = new Dictionary<string, int>();
             foreach (Tag tag in outputTags.Values)
             {
                 if (tag is DigitalOutput)
@@ -203,9 +228,9 @@ namespace ScadaCore.processing
             return digitalTags;
         }
 
-        public static Dictionary<string, double> GetAnalogOutputTags()
+        public static Dictionary<string, int> GetAnalogOutputTags()
         {
-            Dictionary<string, double> analoglTags = new Dictionary<string, double>();
+            Dictionary<string, int> analoglTags = new Dictionary<string, int>();
             foreach (Tag tag in outputTags.Values)
             {
                 if (tag is AnalogOutput)
@@ -219,7 +244,7 @@ namespace ScadaCore.processing
 
         public static bool ChangeValueDigitalOutputTag(string name, int newValue)
         {
-            if (!ContainsTag(name))
+            if (!ContainsDigitalOutputTag(name))
             {
                 return false;
             }
@@ -227,27 +252,31 @@ namespace ScadaCore.processing
             Tag tag = outputTags[name];
             DigitalOutput digitalOutput = (DigitalOutput)tag;
             digitalOutput.Value = newValue;
-            AddDigitalOutputTag(digitalOutput, newValue);
+            //AddDigitalOutputTagDB(digitalOutput, newValue);
             return true;
         }
 
         public static bool ChangeValueAnalogOutputTag(string name, int newValue)
         {
-            if (!ContainsTag(name))
+            if (!ContainsAnalogOutputTag(name))
             {
                 return false;
             }
 
             Tag tag = outputTags[name];
             AnalogOutput analogOutput = (AnalogOutput)tag;
+            if (analogOutput.LowLimit > newValue || analogOutput.HighLimit < newValue)
+            {
+                return false;
+            }
             analogOutput.Value = newValue;
-            AddAnalogOutputTag(analogOutput, newValue);
+            //AddAnalogOutputTagDB(analogOutput, newValue);
             return true;
         }
 
 
 
-        public static void AddDigitalInputTag(DigitalInput tag,int value)
+        public static void AddDigitalInputTagDB(DigitalInput tag,int value)
        {
             using(DatabaseContext dbContext = new DatabaseContext())
             {
@@ -256,7 +285,7 @@ namespace ScadaCore.processing
                 dbContext.SaveChanges();
             }
         }
-        public static void AddAnalogInputTag(AnalogInput tag, int value)
+        public static void AddAnalogInputTagDB(AnalogInput tag, int value)
         {
             using (DatabaseContext dbContext = new DatabaseContext())
             {

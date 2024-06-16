@@ -52,8 +52,7 @@ namespace DatabaseManager
             string input = "";
             while (true)
             {
-                Console.WriteLine("------------------------------------");
-                Console.WriteLine("Choose an option by entering a number:");
+                Console.WriteLine("\n\n");
                 Console.WriteLine("Choose an option by entering a number:");
                 Console.WriteLine("1. Add a new digital input tag");
                 Console.WriteLine("2. Add a new digital output tag");
@@ -81,45 +80,59 @@ namespace DatabaseManager
                         switch (inputInt)
                         {
                             case 1:
+                                Console.WriteLine();
                                 AddDigitalInputTag();
                                 break;
                             case 2:
+                                Console.WriteLine();
                                 AddDigitalOutputTag();
                                 break;
                             case 3:
+                                Console.WriteLine();
                                 AddAnalogInputTag();
                                 break;
                             case 4:
+                                Console.WriteLine();
                                 AddAnalogOutputTag();
                                 break;
                             case 5:
+                                Console.WriteLine();
                                 TurnOffScan();
                                 break;
                             case 6:
+                                Console.WriteLine();
                                 TurnOnScan();
                                 break;
                             case 7:
+                                Console.WriteLine();
                                 AddAnalogAlarm();
                                 break;
                             case 8:
+                                Console.WriteLine();
                                 DeleteAlarm();
                                 break;
                             case 9:
+                                Console.WriteLine();
                                 ChangeValueDigitalOutput();
                                 break;
                             case 10:
+                                Console.WriteLine();
                                 ChangeValueAnalogOutput();
                                 break;
                             case 11:
+                                Console.WriteLine();
                                 ShowDigitalOutputs();
                                 break;
                             case 12:
+                                Console.WriteLine();
                                 ShowAnalogOutputs();
                                 break;
                             case 13:
+                                Console.WriteLine();
                                 DeleteInputTag();
                                 break;
                             case 14:
+                                Console.WriteLine();
                                 DeleteOutputTag();
                                 break;
                             case 15:
@@ -157,12 +170,23 @@ namespace DatabaseManager
 
         private static void ShowAnalogOutputs()
         {
-            throw new NotImplementedException();
+            Dictionary<string, int> outputs = service.GetAnalogOutputTags();
+            Console.WriteLine("Analog output tags:");
+            foreach (var kv in outputs)
+            {
+                Console.WriteLine($"{kv.Key}: {kv.Value}");
+            }
         }
 
         private static void ShowDigitalOutputs()
         {
-            throw new NotImplementedException();
+            Dictionary<string, int> outputs = service.GetDigitalOutputTags();
+            Console.WriteLine("Digital output tags:");
+            foreach (var kv in outputs)
+            {
+                if (kv.Value == 0) Console.WriteLine($"{kv.Key}: off");
+                else Console.WriteLine($"{kv.Key}: on");
+            }
         }
 
         private static void ChangeValueDigitalOutput()
@@ -171,10 +195,10 @@ namespace DatabaseManager
             int newValue;
             Console.Write("Enter tag name: ");
             tagName = Console.ReadLine();
-            Console.Write("Enter new value (integer value): ");
-            while (!int.TryParse(Console.ReadLine(), out newValue))
+            Console.Write("Enter new value (0 for off, 1 for on): ");
+            while (!int.TryParse(Console.ReadLine(), out newValue) || (newValue != 0 && newValue != 1))
             {
-                Console.Write("Invalid input. Please enter a valid integer for new value: ");
+                Console.Write("Invalid input. Please enter 0 for off or 1 for on: ");
             }
             bool check = service.ChangeValueDigitalOutputTag(tagName, newValue);
             if (check)
@@ -205,7 +229,7 @@ namespace DatabaseManager
             }
             else
             {
-                Console.WriteLine("Invalid tag name!");
+                Console.WriteLine("Invalid tag name or new value!");
             }
         }
 
@@ -319,7 +343,30 @@ namespace DatabaseManager
 
         private static void AddDigitalOutputTag()
         {
-            throw new NotImplementedException();
+            string name;
+            string description;
+            string address;
+            int value;
+
+            name = EnterName();
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine();
+
+            Console.Write("Enter address: ");
+            address = Console.ReadLine();
+
+            Console.Write("Enter value (0 for off, 1 for on): ");
+            while (!int.TryParse(Console.ReadLine(), out value) || (value != 0 && value != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for off or 1 for on: ");
+            }
+
+            bool check = service.AddDigitalOutputTag(name, description, address, value);
+            if (check)
+            {
+                Console.WriteLine("Added digital output tag successfully!");
+            }
         }
 
         private static void AddAnalogInputTag()
@@ -367,7 +414,38 @@ namespace DatabaseManager
 
         private static void AddAnalogOutputTag()
         {
-            throw new NotImplementedException();
+            string name;
+            string description;
+            string address;
+            int value;
+            string units;
+
+            name = EnterName();
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine();
+
+            Console.Write("Enter address: ");
+            address = Console.ReadLine();
+
+            List<int> limits = EnterLimits();
+            int lowLimit = limits[0];
+            int highLimit = limits[1];
+
+            Console.Write("Enter initial value: ");
+            while (!int.TryParse(Console.ReadLine(), out value) || (value < lowLimit || value > highLimit))
+            {
+                Console.Write("Invalid input. Please enter a number between low limit and high limit: ");
+            }
+
+            Console.Write("Enter tag units: ");
+            units = Console.ReadLine();
+
+            bool check = service.AddAnalogOutputTag(name, description, address, value, lowLimit, highLimit, units);
+            if (check)
+            {
+                Console.WriteLine("Added analog output tag successfully!");
+            }
         }
 
         private static void Login()
@@ -439,14 +517,14 @@ namespace DatabaseManager
 
         private static string EnterName()
         {
-            bool check = false;
             string name = "";
-            while (!check)
+            while (true)
             {
                 Console.Write("Enter tag name: ");
                 name = Console.ReadLine();
                 if (service.CheckTagName(name))
                 {
+                    Console.WriteLine("Tag name already exists!");
                     continue;
                 }
                 else break;

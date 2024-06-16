@@ -112,16 +112,16 @@ namespace DatabaseManager.ServiceReference1 {
         System.Threading.Tasks.Task<bool> RemoveOutputTagAsync(string name);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTagsResponse")]
-        System.Collections.Generic.Dictionary<string, double> GetDigitalOutputTags();
+        System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTagsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, double>> GetDigitalOutputTagsAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTagsResponse")]
-        System.Collections.Generic.Dictionary<string, double> GetAnalogOutputTags();
+        System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTagsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, double>> GetAnalogOutputTagsAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTagResponse")]
         bool ChangeValueDigitalOutputTag(string name, int newValue);
@@ -297,19 +297,19 @@ namespace DatabaseManager.ServiceReference1 {
             return base.Channel.RemoveOutputTagAsync(name);
         }
         
-        public System.Collections.Generic.Dictionary<string, double> GetDigitalOutputTags() {
+        public System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags() {
             return base.Channel.GetDigitalOutputTags();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, double>> GetDigitalOutputTagsAsync() {
+        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync() {
             return base.Channel.GetDigitalOutputTagsAsync();
         }
         
-        public System.Collections.Generic.Dictionary<string, double> GetAnalogOutputTags() {
+        public System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags() {
             return base.Channel.GetAnalogOutputTags();
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, double>> GetAnalogOutputTagsAsync() {
+        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync() {
             return base.Channel.GetAnalogOutputTagsAsync();
         }
         
