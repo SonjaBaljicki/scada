@@ -3,6 +3,7 @@ using ScadaCore.model.enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Web;
 
 namespace ScadaCore.processing
@@ -11,7 +12,10 @@ namespace ScadaCore.processing
     {
         public static Dictionary<string, Tag> inputTags = new Dictionary<string, Tag>();
         public static Dictionary<string, Tag> outputTags = new Dictionary<string, Tag>();
+        public static Dictionary<string,Thread> tagThreads=new Dictionary<string, Thread>();
 
+        public delegate void MessageArrivedDelegate(string message);
+        public static event MessageArrivedDelegate OnMessageArrived;
 
         public static bool ContainsTag(string name)
         {
@@ -28,9 +32,46 @@ namespace ScadaCore.processing
             {
                 return false;
             }
+            Thread t=null;
             DigitalInput tag = new DigitalInput(name, description, driver, address, scanTime, scanOn);
             inputTags[name] = tag;
+            if (tag.Driver == 0)   //real time driver
+            {
+                if (!RealTimeDriver.DriverValues.ContainsKey(address))
+                {
+                    RealTimeDriver.SetValue(address, 0);
+                }
+            }
+            t = new Thread(SimualteValuesDigitalInput);
+            tagThreads[tag.TagName] = t;
+            t.Start(tag);
+
             return true;
+        }
+
+        private static void SimualteValuesDigitalInput(object tag)
+        {
+            DigitalInput digitalTag = (DigitalInput)tag;
+            double value = 0;
+
+            while (true)
+            {
+                if (digitalTag.ScanOn)
+                {
+                    if (digitalTag.Driver == 0)
+                    {
+                        value = RealTimeDriver.DriverValues[digitalTag.Address];
+                    }
+                    else
+                    {
+                        value = SimulationDriver.ReturnValue(digitalTag.Address);
+
+                    }
+                    OnMessageArrived?.Invoke($"Value of {digitalTag.TagName} tag is: {value}");
+
+                    Thread.Sleep(digitalTag.ScanTime * 1000);
+                }
+            }  
         }
 
         public static bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units)

@@ -24,10 +24,6 @@ namespace ScadaCore
 
         public static bool SetValue(string address, double value)
         {
-            if (!DriverValues.ContainsKey(address))
-            {
-                return false;
-            }
             lock (lockDictValue) 
                 DriverValues[address] = value;
             return true;

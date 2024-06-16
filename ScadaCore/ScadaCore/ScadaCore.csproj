@@ -75,6 +75,7 @@
   <ItemGroup>
     <Content Include="DatabaseManagerService.svc" />
     <Content Include="RealTimeUnitService.svc" />
+    <Content Include="TrendingService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +85,7 @@
     </Compile>
     <Compile Include="IDatabaseManagerService.cs" />
     <Compile Include="IRealTimeUnitService.cs" />
+    <Compile Include="ITrendingService.cs" />
     <Compile Include="model\Alarm.cs" />
     <Compile Include="model\AlarmEntity.cs" />
     <Compile Include="model\AnalogInput.cs" />
@@ -103,6 +105,9 @@
       <DependentUpon>RealTimeUnitService.svc</DependentUpon>
     </Compile>
     <Compile Include="SimulationDriver.cs" />
+    <Compile Include="TrendingService.svc.cs">
+      <DependentUpon>TrendingService.svc</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

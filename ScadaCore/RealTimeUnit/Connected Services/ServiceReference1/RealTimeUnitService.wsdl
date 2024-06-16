@@ -51,7 +51,7 @@
   </wsdl:binding>
   <wsdl:service name="RealTimeUnitService">
     <wsdl:port name="BasicHttpBinding_IRealTimeUnitService" binding="tns:BasicHttpBinding_IRealTimeUnitService">
-      <soap:address location="http://localhost:49357/RealTimeUnitService.svc" />
+      <soap:address location="http://localhost:49357/RealTimeUnitService.svc/RealTimeUnit" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

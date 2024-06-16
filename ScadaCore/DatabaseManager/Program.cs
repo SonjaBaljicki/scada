@@ -126,9 +126,10 @@ namespace DatabaseManager
                                 break;
                             case 17:
                                 service.LogOut(token);
+                                token = "";
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Log out successful!");
-                                break;
+                                return;
                             default:
                                 continue;
                         }
@@ -202,7 +203,71 @@ namespace DatabaseManager
 
         private static void AddDigitalInputTag()
         {
-            throw new NotImplementedException();
+            string name;
+            string description;
+            string address;
+            int driver;
+            int scanTime;
+            bool scanOn;
+
+            Console.Write("Enter tag name: ");
+            name = Console.ReadLine();
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine();
+
+            driver=EnterDriver();
+
+            address = EnterAddress(driver);
+
+            Console.Write("Enter scanTime (integer value): ");
+            while (!int.TryParse(Console.ReadLine(), out scanTime))
+            {
+                Console.Write("Invalid input. Please enter a valid integer for scanTime: ");
+            }
+
+            Console.Write("Enter scanOn (0 for false, 1 for true): ");
+            int scanOnInput;
+            while (!int.TryParse(Console.ReadLine(), out scanOnInput) || (scanOnInput != 0 && scanOnInput != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for false or 1 for true: ");
+            }
+            scanOn = scanOnInput == 1;
+
+            service.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
+        }
+
+        private static string EnterAddress(int driver)
+        {
+            if (driver == 0)
+            {
+                string address;
+                Console.Write("Enter address: ");
+                address = Console.ReadLine();
+                return address;
+            }
+            else
+            {
+                Console.Write("Enter value S for sine, C for cosine or R for ramp: ");
+                string address = Console.ReadLine().ToUpper();
+                while (address != "S" && address != "C" && address != "R")
+                {
+                    Console.WriteLine("Wrong input, enter again!");
+                    address = Console.ReadLine().ToUpper();
+                }
+                return address;
+            }
+        }
+
+        private static int EnterDriver()
+        {
+            int driver;
+            Console.Write("Enter driver (integer value: 0-Real time driver, 1-Simulation driver): ");
+            while (!int.TryParse(Console.ReadLine(), out driver) || (driver != 0 && driver != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for false or 1 for true: ");
+            }
+            return driver;
         }
 
         private static void AddDigitalOutputTag()
