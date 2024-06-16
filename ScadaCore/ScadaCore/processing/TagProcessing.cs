@@ -43,45 +43,32 @@ namespace ScadaCore.processing
                 }
             }
             t = new Thread(SimualteValuesDigitalInput);
+            t.IsBackground= true;
             tagThreads[tag.TagName] = t;
             t.Start(tag);
 
             return true;
         }
-
-        private static void SimualteValuesDigitalInput(object tag)
-        {
-            DigitalInput digitalTag = (DigitalInput)tag;
-            double value = 0;
-
-            while (true)
-            {
-                if (digitalTag.ScanOn)
-                {
-                    if (digitalTag.Driver == 0)
-                    {
-                        value = RealTimeDriver.DriverValues[digitalTag.Address];
-                    }
-                    else
-                    {
-                        value = SimulationDriver.ReturnValue(digitalTag.Address);
-
-                    }
-                    OnMessageArrived?.Invoke($"Value of {digitalTag.TagName} tag is: {value}");
-
-                    Thread.Sleep(digitalTag.ScanTime * 1000);
-                }
-            }  
-        }
-
         public static bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units)
         {
             if (ContainsTag(name))
             {
                 return false;
             }
+            Thread t = null;
             AnalogInput tag = new AnalogInput(name, description, address, driver, scanTime, scanOn, new List<Alarm>(), lowLimit, hightLimit, units);
             inputTags[name] = tag;
+            if (tag.Driver == 0)   //real time driver
+            {
+                if (!RealTimeDriver.DriverValues.ContainsKey(address))
+                {
+                    RealTimeDriver.SetValue(address, 0);
+                }
+            }
+            t = new Thread(SimualteValuesAnalogInput);
+            t.IsBackground = true;
+            tagThreads[tag.TagName] = t;
+            t.Start(tag);
             return true;
         }
 
@@ -208,7 +195,7 @@ namespace ScadaCore.processing
             Tag tag = outputTags[name];
             DigitalOutput digitalOutput = (DigitalOutput)tag;
             digitalOutput.Value = newValue;
-            TagProcessing.AddDigitalOutputTag(digitalOutput, newValue);
+            AddDigitalOutputTag(digitalOutput, newValue);
             return true;
         }
 
@@ -222,7 +209,7 @@ namespace ScadaCore.processing
             Tag tag = outputTags[name];
             AnalogOutput analogOutput = (AnalogOutput)tag;
             analogOutput.Value = newValue;
-            TagProcessing.AddAnalogOutputTag(analogOutput, newValue);
+            AddAnalogOutputTag(analogOutput, newValue);
             return true;
         }
 
@@ -262,6 +249,71 @@ namespace ScadaCore.processing
                 TagEntity tagEntity = new TagEntity(tag.TagName, TagType.ANALOG_OUTPUT, new DateTime(), value);
                 dbContext.tags.Add(tagEntity);
                 dbContext.SaveChanges();
+            }
+        }
+
+        private static void SimualteValuesDigitalInput(object tag)
+        {
+            DigitalInput digitalTag = (DigitalInput)tag;
+            double value = 0;
+
+            while (true)
+            {
+                if (digitalTag.ScanOn)
+                {
+                    if (digitalTag.Driver == 0)
+                    {
+                        value = RealTimeDriver.DriverValues[digitalTag.Address];
+
+                        if (value < 0.5) value = 0;
+                        else value = 1;
+                    }
+                    else
+                    {
+                        value = SimulationDriver.ReturnValue(digitalTag.Address);
+
+                        if (value <= 0) value = 0;
+                        else value = 1;
+
+                    }
+                    OnMessageArrived?.Invoke($"Value of {digitalTag.TagName} tag is: {value}");
+
+                    Thread.Sleep(digitalTag.ScanTime * 1000);
+                }
+            }
+        }
+        private static void SimualteValuesAnalogInput(object tag)
+        {
+            AnalogInput analogTag = (AnalogInput)tag;
+            double value = 0;
+
+            while (true)
+            {
+                if (analogTag.ScanOn)
+                {
+                    if (analogTag.Driver == 0)
+                    {
+                        value = RealTimeDriver.DriverValues[analogTag.Address];
+                    }
+                    else
+                    {
+                        value = SimulationDriver.ReturnValue(analogTag.Address);
+                    }
+
+                    if (value < analogTag.LowLimit) value = analogTag.LowLimit;
+                    else if (value > analogTag.HighLimit) value = analogTag.HighLimit;
+
+                    OnMessageArrived?.Invoke($"Value of {analogTag.TagName} tag is: {value}");
+
+                    Thread.Sleep(analogTag.ScanTime * 1000);
+                }
+            }
+        }
+        public static void StopTagThreads()
+        {
+            foreach (var value in tagThreads)
+            {
+                value.Value.Join();
             }
         }
     }

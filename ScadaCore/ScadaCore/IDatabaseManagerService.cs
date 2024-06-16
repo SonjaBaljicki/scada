@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
+using System.Threading;
 
 namespace ScadaCore
 {
@@ -18,6 +19,13 @@ namespace ScadaCore
         bool LogOut(string token);
         [OperationContract]
         bool DatabaseEmpty();
+
+        [OperationContract]
+        void StopTagThreads();
+
+        [OperationContract]
+        bool CheckTagName(string name);
+
         [OperationContract]
         bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn);
         [OperationContract]

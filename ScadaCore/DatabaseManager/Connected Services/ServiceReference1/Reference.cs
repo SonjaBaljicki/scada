@@ -39,6 +39,18 @@ namespace DatabaseManager.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/DatabaseEmpty", ReplyAction="http://tempuri.org/IDatabaseManagerService/DatabaseEmptyResponse")]
         System.Threading.Tasks.Task<bool> DatabaseEmptyAsync();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/StopTagThreads", ReplyAction="http://tempuri.org/IDatabaseManagerService/StopTagThreadsResponse")]
+        void StopTagThreads();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/StopTagThreads", ReplyAction="http://tempuri.org/IDatabaseManagerService/StopTagThreadsResponse")]
+        System.Threading.Tasks.Task StopTagThreadsAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/CheckTagName", ReplyAction="http://tempuri.org/IDatabaseManagerService/CheckTagNameResponse")]
+        bool CheckTagName(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/CheckTagName", ReplyAction="http://tempuri.org/IDatabaseManagerService/CheckTagNameResponse")]
+        System.Threading.Tasks.Task<bool> CheckTagNameAsync(string name);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTagResponse")]
         bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn);
         
@@ -169,6 +181,22 @@ namespace DatabaseManager.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> DatabaseEmptyAsync() {
             return base.Channel.DatabaseEmptyAsync();
+        }
+        
+        public void StopTagThreads() {
+            base.Channel.StopTagThreads();
+        }
+        
+        public System.Threading.Tasks.Task StopTagThreadsAsync() {
+            return base.Channel.StopTagThreadsAsync();
+        }
+        
+        public bool CheckTagName(string name) {
+            return base.Channel.CheckTagName(name);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CheckTagNameAsync(string name) {
+            return base.Channel.CheckTagNameAsync(name);
         }
         
         public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn) {
