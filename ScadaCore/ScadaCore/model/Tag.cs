@@ -13,7 +13,6 @@ namespace ScadaCore.model
         public string TagName { get; set; }
         [DataMember]
         public string Description { get; set; }
- 
         [DataMember]
         public string Address { get; set; }
     }

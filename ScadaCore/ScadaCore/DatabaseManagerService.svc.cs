@@ -44,7 +44,7 @@ namespace ScadaCore
         }
         public bool CheckTagName(string name) 
         {
-            return TagProcessing.inputTags.ContainsKey(name);
+            return TagProcessing.ContainsTag(name);
         }
 
         public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn)
@@ -87,12 +87,12 @@ namespace ScadaCore
             return TagProcessing.RemoveOutputTag(name);
         }
 
-        public Dictionary<string, double> GetDigitalOutputTags()
+        public Dictionary<string, int> GetDigitalOutputTags()
         {
             return TagProcessing.GetDigitalOutputTags();
         }
 
-        public Dictionary<string, double> GetAnalogOutputTags()
+        public Dictionary<string, int> GetAnalogOutputTags()
         {
             return TagProcessing.GetAnalogOutputTags();
         }
