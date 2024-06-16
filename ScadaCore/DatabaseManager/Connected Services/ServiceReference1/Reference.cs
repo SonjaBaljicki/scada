@@ -75,6 +75,18 @@ namespace DatabaseManager.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTagResponse")]
         System.Threading.Tasks.Task<bool> AddAnalogOutputTagAsync(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarmResponse")]
+        bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarmResponse")]
+        System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/CheckAlarmId", ReplyAction="http://tempuri.org/IDatabaseManagerService/CheckAlarmIdResponse")]
+        bool CheckAlarmId(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/CheckAlarmId", ReplyAction="http://tempuri.org/IDatabaseManagerService/CheckAlarmIdResponse")]
+        System.Threading.Tasks.Task<bool> CheckAlarmIdAsync(int id);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/TurnOnScan", ReplyAction="http://tempuri.org/IDatabaseManagerService/TurnOnScanResponse")]
         bool TurnOnScan(string name);
         
@@ -122,6 +134,12 @@ namespace DatabaseManager.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTagResponse")]
         System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTagResponse")]
+        bool ContainsAnalogInputTag(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTagResponse")]
+        System.Threading.Tasks.Task<bool> ContainsAnalogInputTagAsync(string name);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -231,6 +249,22 @@ namespace DatabaseManager.ServiceReference1 {
             return base.Channel.AddAnalogOutputTagAsync(name, description, address, initialValue, lowLimit, hightLimit, units);
         }
         
+        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units) {
+            return base.Channel.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units);
+        }
+        
+        public System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units) {
+            return base.Channel.AddAnalogAlarmAsync(tagName, id, type, priority, edgeValue, units);
+        }
+        
+        public bool CheckAlarmId(int id) {
+            return base.Channel.CheckAlarmId(id);
+        }
+        
+        public System.Threading.Tasks.Task<bool> CheckAlarmIdAsync(int id) {
+            return base.Channel.CheckAlarmIdAsync(id);
+        }
+        
         public bool TurnOnScan(string name) {
             return base.Channel.TurnOnScan(name);
         }
@@ -293,6 +327,14 @@ namespace DatabaseManager.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue) {
             return base.Channel.ChangeValueAnalogOutputTagAsync(name, newValue);
+        }
+        
+        public bool ContainsAnalogInputTag(string name) {
+            return base.Channel.ContainsAnalogInputTag(name);
+        }
+        
+        public System.Threading.Tasks.Task<bool> ContainsAnalogInputTagAsync(string name) {
+            return base.Channel.ContainsAnalogInputTagAsync(name);
         }
     }
 }

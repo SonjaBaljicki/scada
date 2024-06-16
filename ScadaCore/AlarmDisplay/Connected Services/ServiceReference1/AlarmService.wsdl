@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="TrendingService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
-  <wsp:Policy wsu:Id="WSDualHttpBinding_ITrendingService_policy">
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="AlarmService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IAlarmService_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
@@ -103,7 +103,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_ITrendingService_Init_Input_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IAlarmService_Init_Input_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -126,7 +126,7 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
-  <wsp:Policy wsu:Id="WSDualHttpBinding_ITrendingService_MessageArrived_output_policy">
+  <wsp:Policy wsu:Id="WSDualHttpBinding_IAlarmService_MessageArrived_output_policy">
     <wsp:ExactlyOne>
       <wsp:All>
         <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
@@ -151,47 +151,47 @@
   </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
-      <xsd:import schemaLocation="http://localhost:49357/TrendingService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
-      <xsd:import schemaLocation="http://localhost:49357/TrendingService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://localhost:49357/AlarmService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://localhost:49357/AlarmService.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
     </xsd:schema>
   </wsdl:types>
-  <wsdl:message name="ITrendingService_Init_InputMessage">
+  <wsdl:message name="IAlarmService_Init_InputMessage">
     <wsdl:part name="parameters" element="tns:Init" />
   </wsdl:message>
-  <wsdl:message name="ITrendingService_MessageArrived_OutputCallbackMessage">
+  <wsdl:message name="IAlarmService_MessageArrived_OutputCallbackMessage">
     <wsdl:part name="parameters" element="tns:MessageArrived" />
   </wsdl:message>
-  <wsdl:portType name="ITrendingService">
+  <wsdl:portType name="IAlarmService">
     <wsdl:operation name="Init">
-      <wsdl:input wsaw:Action="http://tempuri.org/ITrendingService/Init" message="tns:ITrendingService_Init_InputMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/IAlarmService/Init" message="tns:IAlarmService_Init_InputMessage" />
     </wsdl:operation>
     <wsdl:operation name="MessageArrived">
-      <wsdl:output wsaw:Action="http://tempuri.org/ITrendingService/MessageArrived" message="tns:ITrendingService_MessageArrived_OutputCallbackMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IAlarmService/MessageArrived" message="tns:IAlarmService_MessageArrived_OutputCallbackMessage" />
     </wsdl:operation>
   </wsdl:portType>
-  <wsdl:binding name="WSDualHttpBinding_ITrendingService" type="tns:ITrendingService">
-    <wsp:PolicyReference URI="#WSDualHttpBinding_ITrendingService_policy" />
+  <wsdl:binding name="WSDualHttpBinding_IAlarmService" type="tns:IAlarmService">
+    <wsp:PolicyReference URI="#WSDualHttpBinding_IAlarmService_policy" />
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
     <wsdl:operation name="Init">
-      <soap12:operation soapAction="http://tempuri.org/ITrendingService/Init" style="document" />
+      <soap12:operation soapAction="http://tempuri.org/IAlarmService/Init" style="document" />
       <wsdl:input>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_ITrendingService_Init_Input_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IAlarmService_Init_Input_policy" />
         <soap12:body use="literal" />
       </wsdl:input>
     </wsdl:operation>
     <wsdl:operation name="MessageArrived">
-      <soap12:operation soapAction="http://tempuri.org/ITrendingService/MessageArrived" style="document" />
+      <soap12:operation soapAction="http://tempuri.org/IAlarmService/MessageArrived" style="document" />
       <wsdl:output>
-        <wsp:PolicyReference URI="#WSDualHttpBinding_ITrendingService_MessageArrived_output_policy" />
+        <wsp:PolicyReference URI="#WSDualHttpBinding_IAlarmService_MessageArrived_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>
   </wsdl:binding>
-  <wsdl:service name="TrendingService">
-    <wsdl:port name="WSDualHttpBinding_ITrendingService" binding="tns:WSDualHttpBinding_ITrendingService">
-      <soap12:address location="http://localhost:49357/TrendingService.svc/Trending" />
+  <wsdl:service name="AlarmService">
+    <wsdl:port name="WSDualHttpBinding_IAlarmService" binding="tns:WSDualHttpBinding_IAlarmService">
+      <soap12:address location="http://localhost:49357/AlarmService.svc/Alarm" />
       <wsa10:EndpointReference>
-        <wsa10:Address>http://localhost:49357/TrendingService.svc/Trending</wsa10:Address>
+        <wsa10:Address>http://localhost:49357/AlarmService.svc/Alarm</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
           <Upn>DESKTOP-OU2I46P\dunja</Upn>
         </Identity>

@@ -1,4 +1,5 @@
 ﻿using ScadaCore.model;
+using ScadaCore.model.enums;
 using ScadaCore.processing;
 using System;
 using System.Collections.Generic;
@@ -104,6 +105,27 @@ namespace ScadaCore
         public bool ChangeValueAnalogOutputTag(string name, int newValue)
         {
             return TagProcessing.ChangeValueAnalogOutputTag(name, newValue);
+        }
+
+        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units)
+        {
+            if (!CheckAlarmId(id))
+            {
+                AlarmType alarmType = type == 1 ? AlarmType.HIGH : AlarmType.LOW;
+                TagProcessing.AddAnalogAlarm(tagName, id, alarmType, priority, edgeValue, units);
+                return true;
+            }
+            return false;
+        }
+
+        public bool CheckAlarmId(int id)
+        {
+            return TagProcessing.CheckAlarmId(id);
+        }
+
+        public bool ContainsAnalogInputTag(string name)
+        {
+            return TagProcessing.ContainsAnalogInputTag(name);
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading;
+using System.Web.UI.WebControls;
 
 namespace ScadaCore
 {
@@ -35,6 +36,10 @@ namespace ScadaCore
         [OperationContract]
         bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units);
         [OperationContract]
+        bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units);
+        [OperationContract]
+        bool CheckAlarmId(int id);
+        [OperationContract]
         bool TurnOnScan(string name);
         [OperationContract]
         bool TurnOffScan(string name);
@@ -50,5 +55,7 @@ namespace ScadaCore
         bool ChangeValueDigitalOutputTag(string name, int newValue);
         [OperationContract]
         bool ChangeValueAnalogOutputTag(string name, int newValue);
+        [OperationContract]
+        bool ContainsAnalogInputTag(string name);
     }
 }

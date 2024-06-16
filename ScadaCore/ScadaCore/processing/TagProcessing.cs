@@ -2,9 +2,13 @@
 using ScadaCore.model.enums;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
+using System.Web.UI.WebControls;
+using System.Xml.Linq;
 
 namespace ScadaCore.processing
 {
@@ -12,10 +16,31 @@ namespace ScadaCore.processing
     {
         public static Dictionary<string, Tag> inputTags = new Dictionary<string, Tag>();
         public static Dictionary<string, Tag> outputTags = new Dictionary<string, Tag>();
+        public static Dictionary<int, Alarm> alarms = new Dictionary<int, Alarm>();
         public static Dictionary<string,Thread> tagThreads=new Dictionary<string, Thread>();
 
         public delegate void MessageArrivedDelegate(string message);
         public static event MessageArrivedDelegate OnMessageArrived;
+        public static event MessageArrivedDelegate OnAlarmMessageArrived;
+
+
+        public static bool CheckAlarmId(int id)
+        {
+            if (alarms.ContainsKey(id))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool ContainsAnalogInputTag(string name)
+        {
+            if (inputTags.ContainsKey(name) && inputTags[name] is AnalogInput)
+            {
+                return true;
+            }
+            return false;
+        }
 
         public static bool ContainsTag(string name)
         {
@@ -92,8 +117,15 @@ namespace ScadaCore.processing
             }
             AnalogOutput tag = new AnalogOutput(name, description, address, initialValue, lowLimit, hightLimit, units);
             outputTags[name] = tag;
-            TagProcessing.AddAnalogOutputTag(tag, initialValue);
+            AddAnalogOutputTag(tag, initialValue);
             return true;
+        }
+
+        public static void AddAnalogAlarm(string tagName, int id, AlarmType type, int priority, double edgeValue, string units)
+        {
+            Alarm alarm = new Alarm(id, type, priority, edgeValue, units);
+            AnalogInput analogInputTag = (AnalogInput)inputTags[tagName];
+            analogInputTag.Alarms.Add(alarm);
         }
 
         public static bool TurnOnScan(string name)
@@ -302,6 +334,35 @@ namespace ScadaCore.processing
 
                     if (value < analogTag.LowLimit) value = analogTag.LowLimit;
                     else if (value > analogTag.HighLimit) value = analogTag.HighLimit;
+
+                    string path = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "processing/alarms/alarmsLog.txt";
+
+                    foreach (Alarm alarm in analogTag.Alarms)
+                    {
+                        if (alarm.Type == AlarmType.LOW && alarm.EdgeValue > value)
+                        {
+                            DateTime now = DateTime.Now;
+                            for (int i = 0; i < alarm.Priority; i++)
+                            {
+                                OnAlarmMessageArrived?.Invoke($"LOW VALUE of {analogTag.TagName}: {value}{alarm.UnitsName}\n at {now}");
+                            }
+                            using (StreamWriter streamWriter = File.AppendText(path))
+                            {
+                                streamWriter.WriteLine($"LOW VALUE ALARM with priority {alarm.Priority} of {analogTag.TagName}: {value}{alarm.UnitsName} at {now}");
+                            }
+                        } else if (alarm.Type == AlarmType.HIGH && alarm.EdgeValue < value)
+                        {
+                            DateTime now = DateTime.Now;
+                            for (int i = 0; i < alarm.Priority; i++)
+                            {
+                                OnAlarmMessageArrived?.Invoke($"HIGH VALUE of {analogTag.TagName}: {value}{alarm.UnitsName}\n at {now}");
+                            }
+                            using (StreamWriter streamWriter = File.AppendText(path))
+                            {
+                                streamWriter.WriteLine($"HIGH VALUE ALARM with priority {alarm.Priority} of {analogTag.TagName}: {value}{alarm.UnitsName} at {now}");
+                            }
+                        }
+                    }
 
                     OnMessageArrived?.Invoke($"Value of {analogTag.TagName} tag is: {value}");
 
