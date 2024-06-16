@@ -3,14 +3,12 @@ using ScadaCore.processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading;
 
 namespace ScadaCore
 {
     public class DatabaseManagerService : IDatabaseManagerService
     {
-        public static Dictionary<string, Tag> inputTags = new Dictionary<string, Tag>();
-        public static Dictionary<string, Tag> outputTags = new Dictionary<string, Tag>();
 
         public bool Registration(string username, string password)
         {
@@ -37,6 +35,15 @@ namespace ScadaCore
                 }
                 return false;
             }
+        }
+
+        public void StopTagThreads()
+        {
+            TagProcessing.StopTagThreads();
+        }
+        public bool CheckTagName(string name) 
+        {
+            return TagProcessing.inputTags.ContainsKey(name);
         }
 
         public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn)

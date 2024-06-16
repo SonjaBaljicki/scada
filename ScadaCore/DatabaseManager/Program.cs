@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
+using System.Security.Cryptography;
+using System.Windows.Markup;
 
 namespace DatabaseManager
 {
@@ -39,6 +44,7 @@ namespace DatabaseManager
                     continue;
                 }
             }
+            service.StopTagThreads();
         }
 
         private static void LoggedInMenu()
@@ -107,10 +113,10 @@ namespace DatabaseManager
                                 DeleteAlarm();
                                 break;
                             case 11:
-                                ChangeValueDigitalOutput("Enter digital output name: ");
+                                ChangeValueDigitalOutput();
                                 break;
                             case 12:
-                                ChangeValueAnalogOutput("Enter analog output name: ");
+                                ChangeValueAnalogOutput();
                                 break;
                             case 13:
                                 ShowDigitalOutputs();
@@ -126,9 +132,10 @@ namespace DatabaseManager
                                 break;
                             case 17:
                                 service.LogOut(token);
+                                token = "";
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Log out successful!");
-                                break;
+                                return;
                             default:
                                 continue;
                         }
@@ -142,6 +149,7 @@ namespace DatabaseManager
                 {
                     continue;
                 }
+               
             }
         }
 
@@ -165,14 +173,48 @@ namespace DatabaseManager
             throw new NotImplementedException();
         }
 
-        private static void ChangeValueDigitalOutput(string v1)
+        private static void ChangeValueDigitalOutput()
         {
-            throw new NotImplementedException();
+            string tagName;
+            int newValue;
+            Console.Write("Enter tag name: ");
+            tagName = Console.ReadLine();
+            Console.Write("Enter new value (integer value): ");
+            while (!int.TryParse(Console.ReadLine(), out newValue))
+            {
+                Console.Write("Invalid input. Please enter a valid integer for new value: ");
+            }
+            bool check = service.ChangeValueDigitalOutputTag(tagName, newValue);
+            if (check)
+            {
+                Console.WriteLine("Value changed successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid tag name!");
+            }
         }
 
-        private static void ChangeValueAnalogOutput(string v1)
+        private static void ChangeValueAnalogOutput()
         {
-            throw new NotImplementedException();
+            string tagName;
+            int newValue;
+            Console.Write("Enter tag name: ");
+            tagName = Console.ReadLine();
+            Console.Write("Enter new value (integer value): ");
+            while (!int.TryParse(Console.ReadLine(), out newValue))
+            {
+                Console.Write("Invalid input. Please enter a valid integer for new value: ");
+            }
+            bool check=service.ChangeValueAnalogOutputTag(tagName, newValue);
+            if (check)
+            {
+                Console.WriteLine("Value changed successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Invalid tag name!");
+            }
         }
 
         private static void DeleteAlarm()
@@ -192,17 +234,67 @@ namespace DatabaseManager
 
         private static void TurnOnScan()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter tag name: ");
+            string name = Console.ReadLine();
+            bool check=service.TurnOnScan(name);
+            if (check)
+            {
+                Console.WriteLine("Turning on tag successful");
+            }
+            else
+            {
+                Console.WriteLine("Invalid tag name");
+            }
         }
 
         private static void TurnOffScan()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter tag name: ");
+            string name = Console.ReadLine();
+            bool check=service.TurnOffScan(name);
+            if (check)
+            {
+                Console.WriteLine("Turning off tag successful");
+            }
+            else
+            {
+                Console.WriteLine("Invalid tag name");
+            }
         }
 
         private static void AddDigitalInputTag()
         {
-            throw new NotImplementedException();
+            string name;
+            string description;
+            string address;
+            int driver;
+            int scanTime;
+            bool scanOn;
+
+            name = EnterName();
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine();
+
+            driver=EnterDriver();
+
+            address = EnterAddress(driver);
+
+            Console.Write("Enter scanTime (integer value): ");
+            while (!int.TryParse(Console.ReadLine(), out scanTime))
+            {
+                Console.Write("Invalid input. Please enter a valid integer for scanTime: ");
+            }
+
+            Console.Write("Enter scanOn (0 for false, 1 for true): ");
+            int scanOnInput;
+            while (!int.TryParse(Console.ReadLine(), out scanOnInput) || (scanOnInput != 0 && scanOnInput != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for false or 1 for true: ");
+            }
+            scanOn = scanOnInput == 1;
+
+            service.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
         }
 
         private static void AddDigitalOutputTag()
@@ -212,7 +304,45 @@ namespace DatabaseManager
 
         private static void AddAnalogInputTag()
         {
-            throw new NotImplementedException();
+            string name;
+            string description;
+            string address;
+            int driver;
+            int scanTime;
+            bool scanOn;
+            string units;
+
+            name = EnterName();
+
+            Console.Write("Enter description: ");
+            description = Console.ReadLine();
+
+            driver = EnterDriver();
+
+            address = EnterAddress(driver);
+
+            Console.Write("Enter scanTime (integer value): ");
+            while (!int.TryParse(Console.ReadLine(), out scanTime))
+            {
+                Console.Write("Invalid input. Please enter a valid integer for scanTime: ");
+            }
+
+            Console.Write("Enter scanOn (0 for false, 1 for true): ");
+            int scanOnInput;
+            while (!int.TryParse(Console.ReadLine(), out scanOnInput) || (scanOnInput != 0 && scanOnInput != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for false or 1 for true: ");
+            }
+            scanOn = scanOnInput == 1;
+
+            List<int> limits = EnterLimits();
+            int lowLimit = limits[0];
+            int highLimit = limits[1];
+
+            Console.Write("Enter tag units: ");
+            units = Console.ReadLine();
+
+            service.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, highLimit, units);
         }
 
         private static void AddAnalogOutputTag()
@@ -251,6 +381,85 @@ namespace DatabaseManager
             string password = Console.ReadLine();
             service.Registration(username, password);
             LoggedInMenu();
+        }
+
+        private static string EnterAddress(int driver)
+        {
+            if (driver == 0)
+            {
+                string address;
+                Console.Write("Enter address: ");
+                address = Console.ReadLine();
+                return address;
+            }
+            else
+            {
+                Console.Write("Enter value S for sine, C for cosine or R for ramp: ");
+                string address = Console.ReadLine().ToUpper();
+                while (address != "S" && address != "C" && address != "R")
+                {
+                    Console.WriteLine("Wrong input, enter again!");
+                    address = Console.ReadLine().ToUpper();
+                }
+                return address;
+            }
+        }
+
+        private static int EnterDriver()
+        {
+            int driver;
+            Console.Write("Enter driver (integer value: 0-Real time driver, 1-Simulation driver): ");
+            while (!int.TryParse(Console.ReadLine(), out driver) || (driver != 0 && driver != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for false or 1 for true: ");
+            }
+            return driver;
+        }
+
+
+        private static string EnterName()
+        {
+            bool check = false;
+            string name = "";
+            while (!check)
+            {
+                Console.Write("Enter tag name: ");
+                name = Console.ReadLine();
+                if (service.CheckTagName(name))
+                {
+                    continue;
+                }
+                else break;
+            }
+
+            return name;
+        }
+
+        private static List<int> EnterLimits()
+        {
+            List<int> limits = new List<int>();
+            bool check = false;
+            int lowLimit = 0;
+            int highLimit = 0;
+            while (!check)
+            {
+                Console.Write("Enter low limit: ");
+                string low = Console.ReadLine();
+                check = int.TryParse(low, out lowLimit);
+            }
+
+            check = false;
+            while (!check)
+            {
+                Console.Write("Enter high limit: ");
+                string hight = Console.ReadLine();
+                check = int.TryParse(hight, out highLimit);
+
+                if (lowLimit > highLimit) check = false;
+            }
+            limits.Add(lowLimit);
+            limits.Add(highLimit);
+            return limits;
         }
     }
 }
