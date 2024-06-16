@@ -62,16 +62,14 @@ namespace DatabaseManager
                 Console.WriteLine("5. Disable input tag scan");
                 Console.WriteLine("6. Enable input tag scan");
                 Console.WriteLine("7. Add alarm to analog input");
-                Console.WriteLine("8. Add alarm to digital input");
-                Console.WriteLine("9. Delete alarm from analog input");
-                Console.WriteLine("10. Delete alarm from digital input");
-                Console.WriteLine("11. Change value of digital output");
-                Console.WriteLine("12. Change value of analog output");
-                Console.WriteLine("13. Display all values of digital outputs");
-                Console.WriteLine("14. Display all values of analog outputs");
-                Console.WriteLine("15. Delete input tag");
-                Console.WriteLine("16. Delete output tag");
-                Console.WriteLine("17. Log out");
+                Console.WriteLine("8. Delete alarm from analog input");
+                Console.WriteLine("9. Change value of digital output");
+                Console.WriteLine("10. Change value of analog output");
+                Console.WriteLine("11. Display all values of digital outputs");
+                Console.WriteLine("12. Display all values of analog outputs");
+                Console.WriteLine("13. Delete input tag");
+                Console.WriteLine("14. Delete output tag");
+                Console.WriteLine("15. Log out");
 
                 input = Console.ReadLine();
                 int inputInt = 0;
@@ -104,33 +102,27 @@ namespace DatabaseManager
                                 AddAnalogAlarm();
                                 break;
                             case 8:
-                                AddDigitalAlarm();
+                                DeleteAlarm();
                                 break;
                             case 9:
-                                DeleteAlarm();
-                                break;
-                            case 10:
-                                DeleteAlarm();
-                                break;
-                            case 11:
                                 ChangeValueDigitalOutput();
                                 break;
-                            case 12:
+                            case 10:
                                 ChangeValueAnalogOutput();
                                 break;
-                            case 13:
+                            case 11:
                                 ShowDigitalOutputs();
                                 break;
-                            case 14:
+                            case 12:
                                 ShowAnalogOutputs();
                                 break;
-                            case 15:
+                            case 13:
                                 DeleteInputTag();
                                 break;
-                            case 16:
+                            case 14:
                                 DeleteOutputTag();
                                 break;
-                            case 17:
+                            case 15:
                                 service.LogOut(token);
                                 token = "";
                                 Console.WriteLine("\n\n");
@@ -222,14 +214,42 @@ namespace DatabaseManager
             throw new NotImplementedException();
         }
 
-        private static void AddDigitalAlarm()
-        {
-            throw new NotImplementedException();
-        }
-
         private static void AddAnalogAlarm()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter tag name: ");
+            string tagName = Console.ReadLine();
+            while (!service.ContainsAnalogInputTag(tagName))
+            {
+                Console.Write("Invalid input. Please enter an existing tag name: ");
+                tagName = Console.ReadLine();
+            }
+            Console.Write("Enter alarm id: ");
+            int id;
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Console.Write("Invalid input. Please enter a number: ");
+            }
+            Console.Write("Enter alarm type (0 for low, 1 for high): ");
+            int type;
+            while (!int.TryParse(Console.ReadLine(), out type) || (type != 0 && type != 1))
+            {
+                Console.Write("Invalid input. Please enter 0 for low or 1 for high: ");
+            }
+            Console.Write("Enter alarm priority (1, 2 or 3): ");
+            int priority;
+            while (!int.TryParse(Console.ReadLine(), out priority) || (priority != 1 && priority != 2 && priority != 3))
+            {
+                Console.Write("Invalid input. Please enter valid priority (1, 2 or 3): ");
+            }
+            Console.Write("Enter edge value: ");
+            double edgeValue;
+            while (!double.TryParse(Console.ReadLine(), out edgeValue))
+            {
+                Console.Write("Invalid input. Please enter a number: ");
+            }
+            Console.Write("Enter alarm units: ");
+            string units = Console.ReadLine();
+            bool check = service.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units);
         }
 
         private static void TurnOnScan()
