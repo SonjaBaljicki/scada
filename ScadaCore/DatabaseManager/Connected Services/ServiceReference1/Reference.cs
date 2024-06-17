@@ -105,6 +105,12 @@ namespace DatabaseManager.ServiceReference1 {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveInputTagResponse")]
         System.Threading.Tasks.Task<bool> RemoveInputTagAsync(string name);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveAlarmResponse")]
+        bool RemoveAlarm(int id);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveAlarmResponse")]
+        System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveOutputTagResponse")]
         bool RemoveOutputTag(string name);
         
@@ -140,6 +146,18 @@ namespace DatabaseManager.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTagResponse")]
         System.Threading.Tasks.Task<bool> ContainsAnalogInputTagAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsInputTagResponse")]
+        bool ContainsInputTag(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsInputTagResponse")]
+        System.Threading.Tasks.Task<bool> ContainsInputTagAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsOutputTagResponse")]
+        bool ContainsOutputTag(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsOutputTagResponse")]
+        System.Threading.Tasks.Task<bool> ContainsOutputTagAsync(string name);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -289,6 +307,14 @@ namespace DatabaseManager.ServiceReference1 {
             return base.Channel.RemoveInputTagAsync(name);
         }
         
+        public bool RemoveAlarm(int id) {
+            return base.Channel.RemoveAlarm(id);
+        }
+        
+        public System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id) {
+            return base.Channel.RemoveAlarmAsync(id);
+        }
+        
         public bool RemoveOutputTag(string name) {
             return base.Channel.RemoveOutputTag(name);
         }
@@ -335,6 +361,22 @@ namespace DatabaseManager.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> ContainsAnalogInputTagAsync(string name) {
             return base.Channel.ContainsAnalogInputTagAsync(name);
+        }
+        
+        public bool ContainsInputTag(string name) {
+            return base.Channel.ContainsInputTag(name);
+        }
+        
+        public System.Threading.Tasks.Task<bool> ContainsInputTagAsync(string name) {
+            return base.Channel.ContainsInputTagAsync(name);
+        }
+        
+        public bool ContainsOutputTag(string name) {
+            return base.Channel.ContainsOutputTag(name);
+        }
+        
+        public System.Threading.Tasks.Task<bool> ContainsOutputTagAsync(string name) {
+            return base.Channel.ContainsOutputTagAsync(name);
         }
     }
 }

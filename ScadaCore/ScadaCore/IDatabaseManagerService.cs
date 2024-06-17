@@ -20,13 +20,10 @@ namespace ScadaCore
         bool LogOut(string token);
         [OperationContract]
         bool DatabaseEmpty();
-
         [OperationContract]
         void StopTagThreads();
-
         [OperationContract]
         bool CheckTagName(string name);
-
         [OperationContract]
         bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn);
         [OperationContract]
@@ -46,6 +43,8 @@ namespace ScadaCore
         [OperationContract]
         bool RemoveInputTag(string name);
         [OperationContract]
+        bool RemoveAlarm(int id);
+        [OperationContract]
         bool RemoveOutputTag(string name);
         [OperationContract]
         Dictionary<string, int> GetDigitalOutputTags();
@@ -57,5 +56,9 @@ namespace ScadaCore
         bool ChangeValueAnalogOutputTag(string name, int newValue);
         [OperationContract]
         bool ContainsAnalogInputTag(string name);
+        [OperationContract]
+        bool ContainsInputTag(string name);
+        [OperationContract]
+        bool ContainsOutputTag(string name);
     }
 }

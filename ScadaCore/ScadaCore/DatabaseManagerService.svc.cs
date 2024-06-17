@@ -87,6 +87,11 @@ namespace ScadaCore
             return TagProcessing.RemoveOutputTag(name);
         }
 
+        public bool RemoveAlarm(int id)
+        {
+            return TagProcessing.RemoveAlarm(id);
+        }
+
         public Dictionary<string, int> GetDigitalOutputTags()
         {
             return TagProcessing.GetDigitalOutputTags();
@@ -126,6 +131,16 @@ namespace ScadaCore
         public bool ContainsAnalogInputTag(string name)
         {
             return TagProcessing.ContainsAnalogInputTag(name);
+        }
+
+        public bool ContainsInputTag(string name)
+        {
+            return TagProcessing.ContainsAnalogInputTag(name) || TagProcessing.ContainsDigitalInputTag(name);
+        }
+
+        public bool ContainsOutputTag(string name)
+        {
+            return TagProcessing.ContainsAnalogOutputTag(name) || TagProcessing.ContainsDigitalOutputTag(name);
         }
     }
 }

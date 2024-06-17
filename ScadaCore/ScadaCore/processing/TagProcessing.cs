@@ -151,6 +151,7 @@ namespace ScadaCore.processing
             Alarm alarm = new Alarm(id, type, priority, edgeValue, units);
             AnalogInput analogInputTag = (AnalogInput)inputTags[tagName];
             analogInputTag.Alarms.Add(alarm);
+            alarms.Add(id, alarm);
         }
 
         public static bool TurnOnScan(string name)
@@ -196,7 +197,7 @@ namespace ScadaCore.processing
 
         public static bool RemoveInputTag(string name)
         {
-            if (!ContainsTag(name))
+            if (!ContainsAnalogInputTag(name) && !ContainsDigitalInputTag(name))
             {
                 return false;
             }
@@ -206,12 +207,32 @@ namespace ScadaCore.processing
 
         public static bool RemoveOutputTag(string name)
         {
-            if (!ContainsTag(name))
+            if (!ContainsAnalogOutputTag(name) && !ContainsDigitalOutputTag(name))
             {
                 return false;
             }
             outputTags.Remove(name);
             return true;
+        }
+
+        public static bool RemoveAlarm(int id)
+        {
+            bool check = false;
+            foreach (Tag tag in inputTags.Values)
+            {
+                if (tag is AnalogInput) {
+                    AnalogInput analogInput = (AnalogInput)tag;
+
+                    if (analogInput.Alarms.Contains(alarms[id]))
+                    {
+                        check = true;
+                        analogInput.Alarms.Remove(alarms[id]);
+                        alarms.Remove(id);
+                        break;
+                    }
+                }
+            }
+            return check;
         }
 
         public static Dictionary<string, int> GetDigitalOutputTags()
@@ -341,6 +362,10 @@ namespace ScadaCore.processing
 
                     Thread.Sleep(digitalTag.ScanTime * 1000);
                 }
+                if (!inputTags.ContainsKey(digitalTag.TagName))
+                {
+                    break;
+                }
             }
         }
         private static void SimualteValuesAnalogInput(object tag)
@@ -396,6 +421,10 @@ namespace ScadaCore.processing
                     OnMessageArrived?.Invoke($"Value of {analogTag.TagName} tag is: {value}");
 
                     Thread.Sleep(analogTag.ScanTime * 1000);
+                }
+                if (!inputTags.ContainsKey(analogTag.TagName))
+                {
+                    break;
                 }
             }
         }
