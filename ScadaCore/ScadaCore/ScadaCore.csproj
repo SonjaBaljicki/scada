@@ -91,6 +91,11 @@
     <Compile Include="IDatabaseManagerService.cs" />
     <Compile Include="IRealTimeUnitService.cs" />
     <Compile Include="ITrendingService.cs" />
+    <Compile Include="Migrations\202406151618245_InitialCreate.cs" />
+    <Compile Include="Migrations\202406151618245_InitialCreate.designer.cs">
+      <DependentUpon>202406151618245_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="model\Alarm.cs" />
     <Compile Include="model\AlarmEntity.cs" />
     <Compile Include="model\AnalogInput.cs" />
@@ -125,6 +130,11 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202406151618245_InitialCreate.resx">
+      <DependentUpon>202406151618245_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

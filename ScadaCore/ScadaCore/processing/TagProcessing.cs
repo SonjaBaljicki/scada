@@ -3,6 +3,7 @@ using ScadaCore.model.enums;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Common.CommandTrees.ExpressionBuilder;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace ScadaCore.processing
         public delegate void MessageArrivedDelegate(string message);
         public static event MessageArrivedDelegate OnMessageArrived;
         public static event MessageArrivedDelegate OnAlarmMessageArrived;
+
+        private static object lockDatabase = new object();
 
 
         public static bool CheckAlarmId(int id)
@@ -87,6 +90,7 @@ namespace ScadaCore.processing
             Thread t=null;
             DigitalInput tag = new DigitalInput(name, description, driver, address, scanTime, scanOn);
             inputTags[name] = tag;
+            AddDigitalInputTagDB(tag, 0);
             if (tag.Driver == 0)   //real time driver
             {
                 if (!RealTimeDriver.DriverValues.ContainsKey(address))
@@ -110,6 +114,7 @@ namespace ScadaCore.processing
             Thread t = null;
             AnalogInput tag = new AnalogInput(name, description, address, driver, scanTime, scanOn, new List<Alarm>(), lowLimit, hightLimit, units);
             inputTags[name] = tag;
+            AddAnalogInputTagDB(tag, 0);
             if (tag.Driver == 0)   //real time driver
             {
                 if (!RealTimeDriver.DriverValues.ContainsKey(address))
@@ -132,6 +137,7 @@ namespace ScadaCore.processing
             }
             DigitalOutput tag = new DigitalOutput(name, description, address, initialValue);
             outputTags[name] = tag;
+            AddDigitalOutputTagDB(tag, initialValue);
             return true;
         }
 
@@ -143,6 +149,7 @@ namespace ScadaCore.processing
             }
             AnalogOutput tag = new AnalogOutput(name, description, address, initialValue, lowLimit, hightLimit, units);
             outputTags[name] = tag;
+            AddAnalogOutputTagDB(tag, initialValue);
             return true;
         }
 
@@ -222,13 +229,15 @@ namespace ScadaCore.processing
             {
                 if (tag is AnalogInput) {
                     AnalogInput analogInput = (AnalogInput)tag;
-
-                    if (analogInput.Alarms.Contains(alarms[id]))
+                    if (alarms.ContainsKey(id))
                     {
-                        check = true;
-                        analogInput.Alarms.Remove(alarms[id]);
-                        alarms.Remove(id);
-                        break;
+                        if (analogInput.Alarms.Contains(alarms[id]))
+                        {
+                            check = true;
+                            analogInput.Alarms.Remove(alarms[id]);
+                            alarms.Remove(id);
+                            break;
+                        }
                     }
                 }
             }
@@ -273,7 +282,7 @@ namespace ScadaCore.processing
             Tag tag = outputTags[name];
             DigitalOutput digitalOutput = (DigitalOutput)tag;
             digitalOutput.Value = newValue;
-            //AddDigitalOutputTagDB(digitalOutput, newValue);
+            AddDigitalOutputTagDB(digitalOutput, newValue);
             return true;
         }
 
@@ -291,46 +300,70 @@ namespace ScadaCore.processing
                 return false;
             }
             analogOutput.Value = newValue;
-            //AddAnalogOutputTagDB(analogOutput, newValue);
+            AddAnalogOutputTagDB(analogOutput, newValue);
             return true;
         }
 
-
+        public static void AddAlarmDB(Alarm alarm, string tagName)
+        {
+            lock (lockDatabase)
+            {
+                using (DatabaseContext dbContext = new DatabaseContext())
+                {
+                    AlarmEntity alarmEntity = new AlarmEntity(alarm.Type, alarm.Priority, tagName, DateTime.Now);
+                    dbContext.alarms.Add(alarmEntity);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
 
         public static void AddDigitalInputTagDB(DigitalInput tag,int value)
        {
-            using(DatabaseContext dbContext = new DatabaseContext())
+            lock (lockDatabase)
             {
-                TagEntity tagEntity = new TagEntity(tag.TagName, TagType.DIGITAL_INPUT, new DateTime(), value);
-                dbContext.tags.Add(tagEntity);
-                dbContext.SaveChanges();
+                using(DatabaseContext dbContext = new DatabaseContext())
+                {
+                    TagEntity tagEntity = new TagEntity(tag.TagName, TagType.DIGITAL_INPUT, DateTime.Now, value);
+                    dbContext.tags.Add(tagEntity);
+                    dbContext.SaveChanges();
+                }
             }
+            
         }
         public static void AddAnalogInputTagDB(AnalogInput tag, int value)
         {
-            using (DatabaseContext dbContext = new DatabaseContext())
+            lock (lockDatabase)
             {
-                TagEntity tagEntity = new TagEntity(tag.TagName, TagType.ANALOG_INPUT, new DateTime(), value);
-                dbContext.tags.Add(tagEntity);
-                dbContext.SaveChanges();
+                using (DatabaseContext dbContext = new DatabaseContext())
+                {
+                    TagEntity tagEntity = new TagEntity(tag.TagName, TagType.ANALOG_INPUT, DateTime.Now, value);
+                    dbContext.tags.Add(tagEntity);
+                    dbContext.SaveChanges();
+                }
             }
         }
-        public static void AddDigitalOutputTag(DigitalOutput tag, int value)
+        public static void AddDigitalOutputTagDB(DigitalOutput tag, int value)
         {
-            using (DatabaseContext dbContext = new DatabaseContext())
+            lock (lockDatabase)
             {
-                TagEntity tagEntity = new TagEntity(tag.TagName, TagType.DIGITAL_OUTPUT, new DateTime(), value);
-                dbContext.tags.Add(tagEntity);
-                dbContext.SaveChanges();
+                using (DatabaseContext dbContext = new DatabaseContext())
+                {
+                    TagEntity tagEntity = new TagEntity(tag.TagName, TagType.DIGITAL_OUTPUT, DateTime.Now, value);
+                    dbContext.tags.Add(tagEntity);
+                    dbContext.SaveChanges();
+                }
             }
         }
-        public static void AddAnalogOutputTag(AnalogOutput tag, int value)
+        public static void AddAnalogOutputTagDB(AnalogOutput tag, int value)
         {
-            using (DatabaseContext dbContext = new DatabaseContext())
+            lock (lockDatabase)
             {
-                TagEntity tagEntity = new TagEntity(tag.TagName, TagType.ANALOG_OUTPUT, new DateTime(), value);
-                dbContext.tags.Add(tagEntity);
-                dbContext.SaveChanges();
+                using (DatabaseContext dbContext = new DatabaseContext())
+                {
+                    TagEntity tagEntity = new TagEntity(tag.TagName, TagType.ANALOG_OUTPUT, DateTime.Now, value);
+                    dbContext.tags.Add(tagEntity);
+                    dbContext.SaveChanges();
+                }
             }
         }
 
@@ -359,6 +392,7 @@ namespace ScadaCore.processing
 
                     }
                     OnMessageArrived?.Invoke($"Value of {digitalTag.TagName} tag is: {value}");
+                    AddDigitalInputTagDB(digitalTag, (int)value);
 
                     Thread.Sleep(digitalTag.ScanTime * 1000);
                 }
@@ -404,7 +438,9 @@ namespace ScadaCore.processing
                             {
                                 streamWriter.WriteLine($"LOW VALUE ALARM with priority {alarm.Priority} of {analogTag.TagName}: {value}{alarm.UnitsName} at {now}");
                             }
-                        } else if (alarm.Type == AlarmType.HIGH && alarm.EdgeValue < value)
+                            AddAlarmDB(alarm, analogTag.TagName);
+                        }
+                        else if (alarm.Type == AlarmType.HIGH && alarm.EdgeValue < value)
                         {
                             DateTime now = DateTime.Now;
                             for (int i = 0; i < alarm.Priority; i++)
@@ -415,10 +451,12 @@ namespace ScadaCore.processing
                             {
                                 streamWriter.WriteLine($"HIGH VALUE ALARM with priority {alarm.Priority} of {analogTag.TagName}: {value}{alarm.UnitsName} at {now}");
                             }
+                            AddAlarmDB(alarm, analogTag.TagName);
                         }
                     }
 
                     OnMessageArrived?.Invoke($"Value of {analogTag.TagName} tag is: {value}");
+                    AddAnalogInputTagDB(analogTag, (int)value);
 
                     Thread.Sleep(analogTag.ScanTime * 1000);
                 }

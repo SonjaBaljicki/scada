@@ -7,9 +7,9 @@ namespace ScadaCore.model.enums
 {
     public enum TagType
     {
-        ANALOG_INPUT,
-        ANALOG_OUTPUT,
-        DIGITAL_INPUT,
-        DIGITAL_OUTPUT
+        ANALOG_INPUT = 0,
+        ANALOG_OUTPUT = 1,
+        DIGITAL_INPUT = 2,
+        DIGITAL_OUTPUT = 3
     }
 }
