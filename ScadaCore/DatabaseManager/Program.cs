@@ -153,19 +153,40 @@ namespace DatabaseManager
                 else
                 {
                     continue;
-                }
-               
+                }  
             }
         }
 
         private static void DeleteOutputTag()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter tag name: ");
+            string tagName = Console.ReadLine();
+            while (!service.ContainsOutputTag(tagName))
+            {
+                Console.Write("Invalid input. Please enter an existing tag name: ");
+                tagName = Console.ReadLine();
+            }
+            bool check = service.RemoveOutputTag(tagName);
+            if (check)
+            {
+                Console.Write("Successfully deleted!");
+            }
         }
 
         private static void DeleteInputTag()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter tag name: ");
+            string tagName = Console.ReadLine();
+            while (!service.ContainsInputTag(tagName))
+            {
+                Console.Write("Invalid input. Please enter an existing tag name: ");
+                tagName = Console.ReadLine();
+            }
+            bool check = service.RemoveInputTag(tagName);
+            if (check)
+            {
+                Console.Write("Successfully deleted!");
+            }
         }
 
         private static void ShowAnalogOutputs()
@@ -235,7 +256,19 @@ namespace DatabaseManager
 
         private static void DeleteAlarm()
         {
-            throw new NotImplementedException();
+            Console.Write("Enter alarm id: ");
+            int id;
+            while (!int.TryParse(Console.ReadLine(), out id))
+            {
+                Console.Write("Invalid input. Please enter a number: ");
+            }
+            bool check = service.RemoveAlarm(id);
+
+            if (!check)
+            {
+                Console.WriteLine();
+                Console.Write("Invalid alarm id.");
+            }
         }
 
         private static void AddAnalogAlarm()
@@ -274,6 +307,11 @@ namespace DatabaseManager
             Console.Write("Enter alarm units: ");
             string units = Console.ReadLine();
             bool check = service.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units);
+
+            if (!check)
+            {
+                Console.Write("Alarm id already exist!");
+            }
         }
 
         private static void TurnOnScan()
@@ -450,7 +488,7 @@ namespace DatabaseManager
 
         private static void Login()
         {
-            Console.WriteLine("\n\n");
+            Console.WriteLine("\n");
             Console.WriteLine("Login:");
             Console.WriteLine("Username:");
             string username = Console.ReadLine();
