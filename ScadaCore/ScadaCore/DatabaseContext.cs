@@ -23,6 +23,8 @@ namespace ScadaCore
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
+            modelBuilder.Entity<AlarmEntity>().HasIndex(a => a.Id).IsUnique();
+            modelBuilder.Entity<TagEntity>().HasIndex(t => t.Id).IsUnique();
         }
     }
 }

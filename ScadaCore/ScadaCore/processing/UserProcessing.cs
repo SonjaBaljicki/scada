@@ -12,6 +12,8 @@ namespace ScadaCore.processing
     public static class UserProcessing
     {
         private static Dictionary<string, User> authenticatedUsers = new Dictionary<string, User>();
+        
+        private static object lockDatabase = new object();
 
 
         public static bool Registration(string username, string password)
@@ -44,26 +46,33 @@ namespace ScadaCore.processing
 
         public static bool AddUser(User user)
         {
-            using (var db = new DatabaseContext())
+            lock (lockDatabase)
             {
-                try
+                using (var db = new DatabaseContext())
                 {
-                    db.users.Add(user);
-                    db.SaveChanges();
+                    try
+                    {
+                        db.users.Add(user);
+                        db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        return false;
+                    }
                 }
-                catch (Exception e)
-                {
-                    return false;
-                }
+                return true;
             }
-            return true;
+            
         }
 
         public static List<User> GetAllUsers()
         {
-            using (var db = new DatabaseContext())
+            lock (lockDatabase)
             {
-                return db.users.ToList();
+                using (var db = new DatabaseContext())
+                {
+                    return db.users.ToList();
+                }
             }
         }
 
