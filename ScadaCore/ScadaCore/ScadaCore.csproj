@@ -76,6 +76,7 @@
     <Content Include="AlarmService.svc" />
     <Content Include="DatabaseManagerService.svc" />
     <Content Include="RealTimeUnitService.svc" />
+    <Content Include="ReportService.svc" />
     <Content Include="TrendingService.svc" />
     <Content Include="Web.config" />
   </ItemGroup>
@@ -90,6 +91,7 @@
     <Compile Include="IAlarmService.cs" />
     <Compile Include="IDatabaseManagerService.cs" />
     <Compile Include="IRealTimeUnitService.cs" />
+    <Compile Include="IReportService.cs" />
     <Compile Include="ITrendingService.cs" />
     <Compile Include="Migrations\202406151618245_InitialCreate.cs" />
     <Compile Include="Migrations\202406151618245_InitialCreate.designer.cs">
@@ -113,6 +115,9 @@
     <Compile Include="RealTimeDriver.cs" />
     <Compile Include="RealTimeUnitService.svc.cs">
       <DependentUpon>RealTimeUnitService.svc</DependentUpon>
+    </Compile>
+    <Compile Include="ReportService.svc.cs">
+      <DependentUpon>ReportService.svc</DependentUpon>
     </Compile>
     <Compile Include="SimulationDriver.cs" />
     <Compile Include="TrendingService.svc.cs">

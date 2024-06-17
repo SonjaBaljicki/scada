@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/ScadaCore.model" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/ScadaCore.model" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://localhost:49357/ReportService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/ScadaCore.model.enums" />
+  <xs:complexType name="ArrayOfAlarmEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AlarmEntity" nillable="true" type="tns:AlarmEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfAlarmEntity" nillable="true" type="tns:ArrayOfAlarmEntity" />
+  <xs:complexType name="AlarmEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Priority" type="xs:int" />
+      <xs:element minOccurs="0" name="TagName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/ScadaCore.model.enums" minOccurs="0" name="Type" type="q1:AlarmType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="AlarmEntity" nillable="true" type="tns:AlarmEntity" />
+  <xs:complexType name="ArrayOfTagEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TagEntity" nillable="true" type="tns:TagEntity" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfTagEntity" nillable="true" type="tns:ArrayOfTagEntity" />
+  <xs:complexType name="TagEntity">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Date" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="Id" type="xs:int" />
+      <xs:element minOccurs="0" name="TagName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/ScadaCore.model.enums" minOccurs="0" name="Type" type="q2:TagType" />
+      <xs:element minOccurs="0" name="Value" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="TagEntity" nillable="true" type="tns:TagEntity" />
+</xs:schema>
