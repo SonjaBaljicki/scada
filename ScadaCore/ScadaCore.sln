@@ -16,6 +16,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlarmDisplay", "AlarmDispla
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReportManager", "ReportManager\ReportManager.csproj", "{ED3716BF-6900-4A7F-8247-7F909FF28683}"
+	ProjectSection(ProjectDependencies) = postProject
+		{42240B4F-F5CE-4EB2-9BC5-780F2AA0161D} = {42240B4F-F5CE-4EB2-9BC5-780F2AA0161D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealTimeUnit", "RealTimeUnit\RealTimeUnit.csproj", "{88599552-912A-41D9-B92C-4E811527F954}"
 	ProjectSection(ProjectDependencies) = postProject
