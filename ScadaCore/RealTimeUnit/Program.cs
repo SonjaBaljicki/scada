@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace RealTimeUnit
 {
@@ -73,7 +70,6 @@ namespace RealTimeUnit
                 string message = address + "," + randomValue.ToString();
                 byte[] signedMessage;
                 SignMessage(message, out signedMessage);
-                Console.WriteLine(randomValue);
                 service.SetValue(message, id.ToString(), signedMessage);
                 Thread.Sleep(TimeSpan.FromSeconds(2));
             }

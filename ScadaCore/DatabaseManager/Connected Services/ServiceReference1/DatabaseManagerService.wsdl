@@ -1008,6 +1008,44 @@
       </wsp:All>
     </wsp:ExactlyOne>
   </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IDatabaseManagerService_ReadFromConfig_Input_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="WSHttpBinding_IDatabaseManagerService_ReadFromConfig_output_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+          <sp:Header Name="To" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="From" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="FaultTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="ReplyTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="MessageID" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="RelatesTo" Namespace="http://www.w3.org/2005/08/addressing" />
+          <sp:Header Name="Action" Namespace="http://www.w3.org/2005/08/addressing" />
+        </sp:SignedParts>
+        <sp:EncryptedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+          <sp:Body />
+        </sp:EncryptedParts>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
   <wsdl:types>
     <xsd:schema targetNamespace="http://tempuri.org/Imports">
       <xsd:import schemaLocation="http://localhost:49357/DatabaseManagerService.svc?xsd=xsd0" namespace="http://tempuri.org/" />
@@ -1159,6 +1197,12 @@
   <wsdl:message name="IDatabaseManagerService_ContainsOutputTag_OutputMessage">
     <wsdl:part name="parameters" element="tns:ContainsOutputTagResponse" />
   </wsdl:message>
+  <wsdl:message name="IDatabaseManagerService_ReadFromConfig_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReadFromConfig" />
+  </wsdl:message>
+  <wsdl:message name="IDatabaseManagerService_ReadFromConfig_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReadFromConfigResponse" />
+  </wsdl:message>
   <wsdl:portType name="IDatabaseManagerService">
     <wsdl:operation name="Registration">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManagerService/Registration" message="tns:IDatabaseManagerService_Registration_InputMessage" />
@@ -1255,6 +1299,10 @@
     <wsdl:operation name="ContainsOutputTag">
       <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManagerService/ContainsOutputTag" message="tns:IDatabaseManagerService_ContainsOutputTag_InputMessage" />
       <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManagerService/ContainsOutputTagResponse" message="tns:IDatabaseManagerService_ContainsOutputTag_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReadFromConfig">
+      <wsdl:input wsaw:Action="http://tempuri.org/IDatabaseManagerService/ReadFromConfig" message="tns:IDatabaseManagerService_ReadFromConfig_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IDatabaseManagerService/ReadFromConfigResponse" message="tns:IDatabaseManagerService_ReadFromConfig_OutputMessage" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="WSHttpBinding_IDatabaseManagerService" type="tns:IDatabaseManagerService">
@@ -1521,6 +1569,17 @@
       </wsdl:input>
       <wsdl:output>
         <wsp:PolicyReference URI="#WSHttpBinding_IDatabaseManagerService_ContainsOutputTag_output_policy" />
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReadFromConfig">
+      <soap12:operation soapAction="http://tempuri.org/IDatabaseManagerService/ReadFromConfig" style="document" />
+      <wsdl:input>
+        <wsp:PolicyReference URI="#WSHttpBinding_IDatabaseManagerService_ReadFromConfig_Input_policy" />
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <wsp:PolicyReference URI="#WSHttpBinding_IDatabaseManagerService_ReadFromConfig_output_policy" />
         <soap12:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

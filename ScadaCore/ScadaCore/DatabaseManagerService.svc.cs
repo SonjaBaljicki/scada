@@ -142,5 +142,10 @@ namespace ScadaCore
         {
             return TagProcessing.ContainsAnalogOutputTag(name) || TagProcessing.ContainsDigitalOutputTag(name);
         }
+
+        public void ReadFromConfig()
+        {
+            TagProcessing.ReadFromConfig();
+        }
     }
 }

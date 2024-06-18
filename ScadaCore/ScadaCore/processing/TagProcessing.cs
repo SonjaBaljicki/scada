@@ -3,6 +3,7 @@ using ScadaCore.model.enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 
@@ -53,13 +54,14 @@ namespace ScadaCore.processing
                         new XAttribute("ScanTime", analogInput.ScanTime),
                         new XAttribute("ScanOn", analogInput.ScanOn),
                         new XAttribute("LowLimit", analogInput.LowLimit),
+                        new XAttribute("UnitsName", analogInput.UnitsName),
                         new XAttribute("HighLimit", analogInput.HighLimit));
                     analogInputElement.Add(alarmElements);
                     inputs.Add(analogInputElement);
                 }
                 else { 
                     DigitalInput digitalInput = (DigitalInput)tag;
-                    XElement digitalInputElement = new XElement("AnalogInput",
+                    XElement digitalInputElement = new XElement("DigitalInput",
                         new XAttribute("TagName", digitalInput.TagName),
                         new XAttribute("Description", digitalInput.Description),
                         new XAttribute("Address", digitalInput.Address),
@@ -76,7 +78,7 @@ namespace ScadaCore.processing
                 if (tag is AnalogOutput)
                 {
                     AnalogOutput analogOutput = (AnalogOutput)tag;
-                    XElement analogOutputElement = new XElement("AnalogInput",
+                    XElement analogOutputElement = new XElement("AnalogOutput",
                         new XAttribute("TagName", analogOutput.TagName),
                         new XAttribute("Description", analogOutput.Description),
                         new XAttribute("Address", analogOutput.Address),
@@ -89,7 +91,7 @@ namespace ScadaCore.processing
                 else
                 {
                     DigitalOutput digitalOutput = (DigitalOutput)tag;
-                    XElement digitalOutputElement = new XElement("AnalogInput",
+                    XElement digitalOutputElement = new XElement("DigitalOutput",
                         new XAttribute("TagName", digitalOutput.TagName),
                         new XAttribute("Description", digitalOutput.Description),
                         new XAttribute("Address", digitalOutput.Address),
@@ -106,13 +108,130 @@ namespace ScadaCore.processing
 
         public static bool ReadFromConfig()
         {
-            //procitamo input tagove
-            //procitamo output tagove
-            //napravimo dodatno i listu alarma
-            //threads za svaki tag
+            XElement xElement = XElement.Load(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "processing/config/ScadaConfig.xml");
+            LoadInputTags(xElement);
+            LoadOutputTags(xElement);
+            InitAlarms();
+            InitThreads();
             return true;
         }
 
+        private static void InitThreads()
+        {
+            foreach(Tag tag in inputTags.Values)
+            {
+                if(tag is DigitalInput)
+                {
+                    DigitalInput digitalTag = (DigitalInput)tag;
+                    Thread thread = new Thread(SimualteValuesDigitalInput);
+                    thread.Start(digitalTag);
+                    tagThreads.Add(digitalTag.TagName, thread);
+                } else
+                {
+                    AnalogInput analogInput = (AnalogInput)tag;
+                    Thread thread = new Thread(SimualteValuesAnalogInput);
+                    thread.Start(analogInput);
+                    tagThreads.Add(analogInput.TagName, thread);
+                }
+            }
+        }
+
+        private static void InitAlarms()
+        {
+            foreach (Tag t in inputTags.Values)
+            {
+                if (t is AnalogInput) {
+                    AnalogInput analogInput = (AnalogInput)t;
+                    foreach (Alarm alarm in analogInput.Alarms)
+                    {
+                        alarms.Add(alarm.Id, alarm);
+                    }
+                } 
+            }
+        }
+
+        private static void LoadOutputTags(XElement xElement)
+        {
+            var analogOutputs = xElement.Descendants("OutputTags").Descendants("AnalogOutput");
+            List<AnalogOutput> listOfAnalogOutputTags = (from analogOutput in analogOutputs
+                                                        select new AnalogOutput
+                                                        {
+                                                           TagName = analogOutput.Attribute("TagName").Value,
+                                                           Description = analogOutput.Attribute("Description").Value,
+                                                           Address = analogOutput.Attribute("Address").Value,
+                                                           Value = int.Parse(analogOutput.Attribute("Value").Value),
+                                                           LowLimit = int.Parse(analogOutput.Attribute("LowLimit").Value),
+                                                           HighLimit = int.Parse(analogOutput.Attribute("HighLimit").Value),
+                                                           UnitsName = analogOutput.Attribute("UnitsName").Value
+                                                           }).ToList();
+            var digitalOutputs = xElement.Descendants("OutputTags").Descendants("DigitalOutput");
+            List<DigitalOutput> listOfDigitalOutputTags = (from digitalOutput in digitalOutputs
+                                                           select new DigitalOutput
+                                                         {
+                                                             TagName = digitalOutput.Attribute("TagName").Value,
+                                                             Description = digitalOutput.Attribute("Description").Value,
+                                                             Address = digitalOutput.Attribute("Address").Value,
+                                                             Value = int.Parse(digitalOutput.Attribute("Value").Value)
+                                                         }).ToList();
+
+
+            foreach (AnalogOutput aOutput in listOfAnalogOutputTags)
+            {
+                outputTags.Add(aOutput.TagName, aOutput);
+            }
+            foreach (DigitalOutput dOutput in listOfDigitalOutputTags)
+            {
+                outputTags.Add(dOutput.TagName, dOutput);
+            }
+        }
+
+        private static void LoadInputTags(XElement xElement)
+        {
+            var analogInputs = xElement.Descendants("InputTags").Descendants("AnalogInput");
+            List<AnalogInput> listOfAnalogInputTags = (from analogInput in analogInputs
+                                                         select new AnalogInput
+                                                         {
+                                                             TagName = analogInput.Attribute("TagName").Value,
+                                                             Description = analogInput.Attribute("Description").Value,
+                                                             Address = analogInput.Attribute("Address").Value,
+                                                             Driver = int.Parse(analogInput.Attribute("Driver").Value),
+                                                             ScanTime = int.Parse(analogInput.Attribute("ScanTime").Value),
+                                                             ScanOn = bool.Parse(analogInput.Attribute("ScanOn").Value),
+                                                             LowLimit = int.Parse(analogInput.Attribute("LowLimit").Value),
+                                                             HighLimit = int.Parse(analogInput.Attribute("HighLimit").Value),
+                                                             UnitsName =analogInput.Attribute("UnitsName").Value,
+                                                             Alarms = (from al in analogInput.Elements()
+                                                                             select new Alarm
+                                                                             {
+                                                                                 Type = (AlarmType)Enum.Parse(typeof(AlarmType), (string)al.Attribute("Type"), true),
+                                                                                 Priority = int.Parse(al.Attribute("Priority").Value),
+                                                                                 Id = int.Parse(al.Attribute("Id").Value),
+                                                                                 EdgeValue = int.Parse(al.Attribute("EdgeValue").Value),
+                                                                                 UnitsName = al.Attribute("UnitsName").Value
+                                                                             }).ToList(),
+                                                         }).ToList();
+            var digitaInputs = xElement.Descendants("InputTags").Descendants("DigitalInput");
+            List<DigitalInput> listOfDigitalInputTags = (from digitalInput in digitaInputs
+                                                         select new DigitalInput
+                                                         {
+                                                             TagName = digitalInput.Attribute("TagName").Value,
+                                                             Description = digitalInput.Attribute("Description").Value,
+                                                             Address = digitalInput.Attribute("Address").Value,
+                                                             Driver = int.Parse(digitalInput.Attribute("Driver").Value),
+                                                             ScanTime = int.Parse(digitalInput.Attribute("ScanTime").Value),
+                                                             ScanOn = bool.Parse(digitalInput.Attribute("ScanOn").Value)
+                                                         }).ToList();
+
+
+            foreach (AnalogInput aInput in listOfAnalogInputTags)
+            {
+                inputTags.Add(aInput.TagName, aInput);
+            }
+            foreach (DigitalInput dInput in listOfDigitalInputTags)
+            {
+                inputTags.Add(dInput.TagName, dInput);
+            }
+        }
 
         public static bool CheckAlarmId(int id)
         {

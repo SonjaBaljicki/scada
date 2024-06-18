@@ -158,6 +158,12 @@ namespace DatabaseManager.ServiceReference1 {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsOutputTagResponse")]
         System.Threading.Tasks.Task<bool> ContainsOutputTagAsync(string name);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ReadFromConfig", ReplyAction="http://tempuri.org/IDatabaseManagerService/ReadFromConfigResponse")]
+        void ReadFromConfig();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ReadFromConfig", ReplyAction="http://tempuri.org/IDatabaseManagerService/ReadFromConfigResponse")]
+        System.Threading.Tasks.Task ReadFromConfigAsync();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -377,6 +383,14 @@ namespace DatabaseManager.ServiceReference1 {
         
         public System.Threading.Tasks.Task<bool> ContainsOutputTagAsync(string name) {
             return base.Channel.ContainsOutputTagAsync(name);
+        }
+        
+        public void ReadFromConfig() {
+            base.Channel.ReadFromConfig();
+        }
+        
+        public System.Threading.Tasks.Task ReadFromConfigAsync() {
+            return base.Channel.ReadFromConfigAsync();
         }
     }
 }

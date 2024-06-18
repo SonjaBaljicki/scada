@@ -358,4 +358,14 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="ReadFromConfig">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReadFromConfigResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
 </xs:schema>
