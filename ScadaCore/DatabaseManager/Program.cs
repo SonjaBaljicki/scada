@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.Remoting.Metadata.W3cXsd2001;
-using System.Security.Cryptography;
-using System.Windows.Markup;
 
 namespace DatabaseManager
 {
@@ -49,6 +45,7 @@ namespace DatabaseManager
 
         private static void LoggedInMenu()
         {
+            service.ReadFromConfig();
             string input = "";
             while (true)
             {
@@ -268,6 +265,11 @@ namespace DatabaseManager
             {
                 Console.WriteLine();
                 Console.Write("Invalid alarm id.");
+            }
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine("Alarm deleted successfully!");
             }
         }
 

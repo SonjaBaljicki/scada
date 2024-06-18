@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Tags>
+  <InputTags>
+    <AnalogInput TagName="tag33" Description="opis33" Address="S" Driver="1" ScanTime="3" ScanOn="false" LowLimit="4" UnitsName="kg" HighLimit="44" />
+    <AnalogInput TagName="tag3" Description="opis3" Address="S" Driver="1" ScanTime="3" ScanOn="true" LowLimit="4" UnitsName="kg" HighLimit="44">
+      <Alarm Id="1" Type="LOW" Priority="2" EdgeValue="20" UnitsName="kg" />
+    </AnalogInput>
+    <DigitalInput TagName="tag1" Description="opis" Address="S" Driver="1" ScanTime="2" ScanOn="true" />
+    <DigitalInput TagName="tag11" Description="opis11" Address="S" Driver="1" ScanTime="3" ScanOn="true" />
+  </InputTags>
+  <OutputTags>
+    <AnalogOutput TagName="tag4" Description="opis4" Address="adresa4" Value="10" UnitsName="kg" LowLimit="5" HighLimit="55" />
+    <DigitalOutput TagName="tag2" Description="opis2" Address="adresa2" Value="1" />
+  </OutputTags>
+</Tags>
