@@ -75,6 +75,7 @@
   <ItemGroup>
     <Content Include="AlarmService.svc" />
     <Content Include="DatabaseManagerService.svc" />
+    <Content Include="processing\config\ScadaConfig.xml" />
     <Content Include="RealTimeUnitService.svc" />
     <Content Include="ReportService.svc" />
     <Content Include="TrendingService.svc" />

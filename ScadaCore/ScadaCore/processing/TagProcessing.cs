@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Xml.Linq;
 
 namespace ScadaCore.processing
 {
@@ -19,6 +20,98 @@ namespace ScadaCore.processing
         public static event MessageArrivedDelegate OnAlarmMessageArrived;
 
         private static object lockDatabase = new object();
+        private static object lockConfig = new object();
+
+        public static bool WriteToConfig()
+        {
+            XElement tags = new XElement("Tags");
+            XElement inputs = new XElement("InputTags");
+            XElement outputs = new XElement("OutputTags");
+            string path = System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "processing/config/ScadaConfig.xml";
+            
+            foreach (Tag tag in inputTags.Values)
+            {
+                if (tag is AnalogInput)
+                {
+                    AnalogInput analogInput = (AnalogInput)tag;
+                    List<XElement> alarmElements = new List<XElement>();
+                    foreach(Alarm a in analogInput.Alarms)
+                    {
+                        XElement alarm = new XElement("Alarm",
+                            new XAttribute("Id", a.Id),
+                            new XAttribute("Type", a.Type),
+                            new XAttribute("Priority", a.Priority),
+                            new XAttribute("EdgeValue", a.EdgeValue),
+                            new XAttribute("UnitsName", a.UnitsName));
+                        alarmElements.Add(alarm);
+                    }
+                    XElement analogInputElement = new XElement("AnalogInput", 
+                        new XAttribute("TagName", analogInput.TagName), 
+                        new XAttribute("Description", analogInput.Description),
+                        new XAttribute("Address", analogInput.Address), 
+                        new XAttribute("Driver", analogInput.Driver), 
+                        new XAttribute("ScanTime", analogInput.ScanTime),
+                        new XAttribute("ScanOn", analogInput.ScanOn),
+                        new XAttribute("LowLimit", analogInput.LowLimit),
+                        new XAttribute("HighLimit", analogInput.HighLimit));
+                    analogInputElement.Add(alarmElements);
+                    inputs.Add(analogInputElement);
+                }
+                else { 
+                    DigitalInput digitalInput = (DigitalInput)tag;
+                    XElement digitalInputElement = new XElement("AnalogInput",
+                        new XAttribute("TagName", digitalInput.TagName),
+                        new XAttribute("Description", digitalInput.Description),
+                        new XAttribute("Address", digitalInput.Address),
+                        new XAttribute("Driver", digitalInput.Driver),
+                        new XAttribute("ScanTime", digitalInput.ScanTime),
+                        new XAttribute("ScanOn", digitalInput.ScanOn));
+                    inputs.Add(digitalInputElement);
+                }
+            }
+            tags.Add(inputs);
+            
+            foreach (Tag tag in outputTags.Values)
+            {
+                if (tag is AnalogOutput)
+                {
+                    AnalogOutput analogOutput = (AnalogOutput)tag;
+                    XElement analogOutputElement = new XElement("AnalogInput",
+                        new XAttribute("TagName", analogOutput.TagName),
+                        new XAttribute("Description", analogOutput.Description),
+                        new XAttribute("Address", analogOutput.Address),
+                        new XAttribute("Value", analogOutput.Value),
+                        new XAttribute("UnitsName", analogOutput.UnitsName),
+                        new XAttribute("LowLimit", analogOutput.LowLimit),
+                        new XAttribute("HighLimit", analogOutput.HighLimit));
+                    outputs.Add(analogOutputElement);
+                }
+                else
+                {
+                    DigitalOutput digitalOutput = (DigitalOutput)tag;
+                    XElement digitalOutputElement = new XElement("AnalogInput",
+                        new XAttribute("TagName", digitalOutput.TagName),
+                        new XAttribute("Description", digitalOutput.Description),
+                        new XAttribute("Address", digitalOutput.Address),
+                        new XAttribute("Value", digitalOutput.Value));
+                    outputs.Add(digitalOutputElement);
+                }
+            }
+            tags.Add(outputs);
+            
+            lock(lockConfig)
+                tags.Save(path);
+            return true;
+        }
+
+        public static bool ReadFromConfig()
+        {
+            //procitamo input tagove
+            //procitamo output tagove
+            //napravimo dodatno i listu alarma
+            //threads za svaki tag
+            return true;
+        }
 
 
         public static bool CheckAlarmId(int id)
@@ -97,6 +190,7 @@ namespace ScadaCore.processing
             tagThreads[tag.TagName] = t;
             t.Start(tag);
 
+            WriteToConfig();
             return true;
         }
         public static bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units)
@@ -120,6 +214,8 @@ namespace ScadaCore.processing
             t.IsBackground = true;
             tagThreads[tag.TagName] = t;
             t.Start(tag);
+
+            WriteToConfig();
             return true;
         }
 
@@ -132,6 +228,8 @@ namespace ScadaCore.processing
             DigitalOutput tag = new DigitalOutput(name, description, address, initialValue);
             outputTags[name] = tag;
             AddDigitalOutputTagDB(tag, initialValue);
+
+            WriteToConfig();
             return true;
         }
 
@@ -144,6 +242,8 @@ namespace ScadaCore.processing
             AnalogOutput tag = new AnalogOutput(name, description, address, initialValue, lowLimit, hightLimit, units);
             outputTags[name] = tag;
             AddAnalogOutputTagDB(tag, initialValue);
+
+            WriteToConfig();
             return true;
         }
 
@@ -153,6 +253,8 @@ namespace ScadaCore.processing
             AnalogInput analogInputTag = (AnalogInput)inputTags[tagName];
             analogInputTag.Alarms.Add(alarm);
             alarms.Add(id, alarm);
+
+            WriteToConfig();
         }
 
         public static bool TurnOnScan(string name)
@@ -172,6 +274,8 @@ namespace ScadaCore.processing
                 AnalogInput analogInput = (AnalogInput)tag;
                 analogInput.ScanOn = true;
             }
+
+            WriteToConfig();
             return true;
 
         }
@@ -193,6 +297,8 @@ namespace ScadaCore.processing
                 AnalogInput analogInput = (AnalogInput)tag;
                 analogInput.ScanOn = false;
             }
+
+            WriteToConfig();
             return true;
         }
 
@@ -203,6 +309,8 @@ namespace ScadaCore.processing
                 return false;
             }
             inputTags.Remove(name);
+
+            WriteToConfig();
             return true;
         }
 
@@ -213,6 +321,8 @@ namespace ScadaCore.processing
                 return false;
             }
             outputTags.Remove(name);
+
+            WriteToConfig();
             return true;
         }
 
@@ -235,6 +345,8 @@ namespace ScadaCore.processing
                     }
                 }
             }
+
+            WriteToConfig();
             return check;
         }
 
@@ -277,6 +389,8 @@ namespace ScadaCore.processing
             DigitalOutput digitalOutput = (DigitalOutput)tag;
             digitalOutput.Value = newValue;
             AddDigitalOutputTagDB(digitalOutput, newValue);
+
+            WriteToConfig();
             return true;
         }
 
@@ -295,6 +409,8 @@ namespace ScadaCore.processing
             }
             analogOutput.Value = newValue;
             AddAnalogOutputTagDB(analogOutput, newValue);
+
+            WriteToConfig();
             return true;
         }
 
@@ -388,6 +504,8 @@ namespace ScadaCore.processing
                     OnMessageArrived?.Invoke($"Value of {digitalTag.TagName} tag is: {value}");
                     AddDigitalInputTagDB(digitalTag, (int)value);
 
+                    WriteToConfig();
+
                     Thread.Sleep(digitalTag.ScanTime * 1000);
                 }
                 if (!inputTags.ContainsKey(digitalTag.TagName))
@@ -451,6 +569,8 @@ namespace ScadaCore.processing
 
                     OnMessageArrived?.Invoke($"Value of {analogTag.TagName} tag is: {value}");
                     AddAnalogInputTagDB(analogTag, (int)value);
+
+                    WriteToConfig();
 
                     Thread.Sleep(analogTag.ScanTime * 1000);
                 }
