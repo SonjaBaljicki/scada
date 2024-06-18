@@ -16,11 +16,14 @@ namespace ScadaCore.processing
         private static object lockDatabase = new object();
 
 
-        public static bool Registration(string username, string password)
+        public static string Registration(string username, string password)
         {
             string encryptedPassword = EncryptData(password);
             User user = new User(username, encryptedPassword);
-            return AddUser(user);
+            AddUser(user);
+            string token = GenerateToken(username);
+            authenticatedUsers.Add(token, user);
+            return token;
         }
 
         public static string LogIn(string username, string password)
@@ -119,6 +122,11 @@ namespace ScadaCore.processing
                 }
             }
             return EncryptValue(valueToEncrypt);
+        }
+
+        internal static bool CheckToken(string token)
+        {
+            return authenticatedUsers.ContainsKey(token);
         }
     }
 }
