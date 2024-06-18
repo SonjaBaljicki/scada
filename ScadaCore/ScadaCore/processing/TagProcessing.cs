@@ -109,6 +109,11 @@ namespace ScadaCore.processing
         public static bool ReadFromConfig()
         {
             XElement xElement = XElement.Load(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + "processing/config/ScadaConfig.xml");
+            //empty lists because of login again
+            inputTags = new Dictionary<string, Tag>();
+            outputTags = new Dictionary<string, Tag>();
+            alarms = new Dictionary<int, Alarm>();
+            tagThreads = new Dictionary<string, Thread>();
             LoadInputTags(xElement);
             LoadOutputTags(xElement);
             InitAlarms();

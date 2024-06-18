@@ -163,7 +163,7 @@ namespace DatabaseManager
                 Console.Write("Invalid input. Please enter an existing tag name: ");
                 tagName = Console.ReadLine();
             }
-            bool check = service.RemoveOutputTag(tagName);
+            bool check = service.RemoveOutputTag(tagName, token);
             if (check)
             {
                 Console.Write("Successfully deleted!");
@@ -179,7 +179,7 @@ namespace DatabaseManager
                 Console.Write("Invalid input. Please enter an existing tag name: ");
                 tagName = Console.ReadLine();
             }
-            bool check = service.RemoveInputTag(tagName);
+            bool check = service.RemoveInputTag(tagName, token);
             if (check)
             {
                 Console.Write("Successfully deleted!");
@@ -188,7 +188,12 @@ namespace DatabaseManager
 
         private static void ShowAnalogOutputs()
         {
-            Dictionary<string, int> outputs = service.GetAnalogOutputTags();
+            Dictionary<string, int> outputs = service.GetAnalogOutputTags(token);
+            if(outputs == null)
+            {
+                Console.WriteLine("Not authenticated! ");
+                return;
+            }
             Console.WriteLine("Analog output tags:");
             foreach (var kv in outputs)
             {
@@ -198,7 +203,12 @@ namespace DatabaseManager
 
         private static void ShowDigitalOutputs()
         {
-            Dictionary<string, int> outputs = service.GetDigitalOutputTags();
+            Dictionary<string, int> outputs = service.GetDigitalOutputTags(token);
+            if (outputs == null)
+            {
+                Console.WriteLine("Not authenticated!");
+                return;
+            }
             Console.WriteLine("Digital output tags:");
             foreach (var kv in outputs)
             {
@@ -218,7 +228,7 @@ namespace DatabaseManager
             {
                 Console.Write("Invalid input. Please enter 0 for off or 1 for on: ");
             }
-            bool check = service.ChangeValueDigitalOutputTag(tagName, newValue);
+            bool check = service.ChangeValueDigitalOutputTag(tagName, newValue, token);
             if (check)
             {
                 Console.WriteLine("Value changed successfully!");
@@ -240,7 +250,7 @@ namespace DatabaseManager
             {
                 Console.Write("Invalid input. Please enter a valid integer for new value: ");
             }
-            bool check=service.ChangeValueAnalogOutputTag(tagName, newValue);
+            bool check=service.ChangeValueAnalogOutputTag(tagName, newValue, token);
             if (check)
             {
                 Console.WriteLine("Value changed successfully!");
@@ -259,7 +269,7 @@ namespace DatabaseManager
             {
                 Console.Write("Invalid input. Please enter a number: ");
             }
-            bool check = service.RemoveAlarm(id);
+            bool check = service.RemoveAlarm(id, token);
 
             if (!check)
             {
@@ -308,7 +318,7 @@ namespace DatabaseManager
             }
             Console.Write("Enter alarm units: ");
             string units = Console.ReadLine();
-            bool check = service.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units);
+            bool check = service.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units, token);
 
             if (!check)
             {
@@ -320,7 +330,7 @@ namespace DatabaseManager
         {
             Console.Write("Enter tag name: ");
             string name = Console.ReadLine();
-            bool check=service.TurnOnScan(name);
+            bool check=service.TurnOnScan(name, token);
             if (check)
             {
                 Console.WriteLine("Turning on tag successful");
@@ -335,7 +345,7 @@ namespace DatabaseManager
         {
             Console.Write("Enter tag name: ");
             string name = Console.ReadLine();
-            bool check=service.TurnOffScan(name);
+            bool check=service.TurnOffScan(name, token);
             if (check)
             {
                 Console.WriteLine("Turning off tag successful");
@@ -378,7 +388,7 @@ namespace DatabaseManager
             }
             scanOn = scanOnInput == 1;
 
-            service.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
+            service.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn, token);
         }
 
         private static void AddDigitalOutputTag()
@@ -402,7 +412,7 @@ namespace DatabaseManager
                 Console.Write("Invalid input. Please enter 0 for off or 1 for on: ");
             }
 
-            bool check = service.AddDigitalOutputTag(name, description, address, value);
+            bool check = service.AddDigitalOutputTag(name, description, address, value, token);
             if (check)
             {
                 Console.WriteLine("Added digital output tag successfully!");
@@ -449,7 +459,7 @@ namespace DatabaseManager
             Console.Write("Enter tag units: ");
             units = Console.ReadLine();
 
-            service.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, highLimit, units);
+            service.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, highLimit, units, token);
         }
 
         private static void AddAnalogOutputTag()
@@ -481,7 +491,7 @@ namespace DatabaseManager
             Console.Write("Enter tag units: ");
             units = Console.ReadLine();
 
-            bool check = service.AddAnalogOutputTag(name, description, address, value, lowLimit, highLimit, units);
+            bool check = service.AddAnalogOutputTag(name, description, address, value, lowLimit, highLimit, units, token);
             if (check)
             {
                 Console.WriteLine("Added analog output tag successfully!");
@@ -517,7 +527,7 @@ namespace DatabaseManager
             string username = Console.ReadLine();
             Console.WriteLine("Password:");
             string password = Console.ReadLine();
-            service.Registration(username, password);
+            token = service.Registration(username, password);
             LoggedInMenu();
         }
 

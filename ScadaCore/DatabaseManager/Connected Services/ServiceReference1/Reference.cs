@@ -16,10 +16,10 @@ namespace DatabaseManager.ServiceReference1 {
     public interface IDatabaseManagerService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/Registration", ReplyAction="http://tempuri.org/IDatabaseManagerService/RegistrationResponse")]
-        bool Registration(string username, string password);
+        string Registration(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/Registration", ReplyAction="http://tempuri.org/IDatabaseManagerService/RegistrationResponse")]
-        System.Threading.Tasks.Task<bool> RegistrationAsync(string username, string password);
+        System.Threading.Tasks.Task<string> RegistrationAsync(string username, string password);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/Login", ReplyAction="http://tempuri.org/IDatabaseManagerService/LoginResponse")]
         string Login(string username, string password);
@@ -52,34 +52,34 @@ namespace DatabaseManager.ServiceReference1 {
         System.Threading.Tasks.Task<bool> CheckTagNameAsync(string name);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTagResponse")]
-        bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn);
+        bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddDigitalInputTagResponse")]
-        System.Threading.Tasks.Task<bool> AddDigitalInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn);
+        System.Threading.Tasks.Task<bool> AddDigitalInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogInputTagResponse")]
-        bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units);
+        bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogInputTagResponse")]
-        System.Threading.Tasks.Task<bool> AddAnalogInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units);
+        System.Threading.Tasks.Task<bool> AddAnalogInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddDigitalOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddDigitalOutputTagResponse")]
-        bool AddDigitalOutputTag(string name, string description, string address, int initialValue);
+        bool AddDigitalOutputTag(string name, string description, string address, int initialValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddDigitalOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddDigitalOutputTagResponse")]
-        System.Threading.Tasks.Task<bool> AddDigitalOutputTagAsync(string name, string description, string address, int initialValue);
+        System.Threading.Tasks.Task<bool> AddDigitalOutputTagAsync(string name, string description, string address, int initialValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTagResponse")]
-        bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units);
+        bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogOutputTagResponse")]
-        System.Threading.Tasks.Task<bool> AddAnalogOutputTagAsync(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units);
+        System.Threading.Tasks.Task<bool> AddAnalogOutputTagAsync(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarmResponse")]
-        bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units);
+        bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/AddAnalogAlarmResponse")]
-        System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units);
+        System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/CheckAlarmId", ReplyAction="http://tempuri.org/IDatabaseManagerService/CheckAlarmIdResponse")]
         bool CheckAlarmId(int id);
@@ -88,58 +88,58 @@ namespace DatabaseManager.ServiceReference1 {
         System.Threading.Tasks.Task<bool> CheckAlarmIdAsync(int id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/TurnOnScan", ReplyAction="http://tempuri.org/IDatabaseManagerService/TurnOnScanResponse")]
-        bool TurnOnScan(string name);
+        bool TurnOnScan(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/TurnOnScan", ReplyAction="http://tempuri.org/IDatabaseManagerService/TurnOnScanResponse")]
-        System.Threading.Tasks.Task<bool> TurnOnScanAsync(string name);
+        System.Threading.Tasks.Task<bool> TurnOnScanAsync(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/TurnOffScan", ReplyAction="http://tempuri.org/IDatabaseManagerService/TurnOffScanResponse")]
-        bool TurnOffScan(string name);
+        bool TurnOffScan(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/TurnOffScan", ReplyAction="http://tempuri.org/IDatabaseManagerService/TurnOffScanResponse")]
-        System.Threading.Tasks.Task<bool> TurnOffScanAsync(string name);
+        System.Threading.Tasks.Task<bool> TurnOffScanAsync(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveInputTagResponse")]
-        bool RemoveInputTag(string name);
+        bool RemoveInputTag(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveInputTagResponse")]
-        System.Threading.Tasks.Task<bool> RemoveInputTagAsync(string name);
+        System.Threading.Tasks.Task<bool> RemoveInputTagAsync(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveAlarmResponse")]
-        bool RemoveAlarm(int id);
+        bool RemoveAlarm(int id, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveAlarm", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveAlarmResponse")]
-        System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id);
+        System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveOutputTagResponse")]
-        bool RemoveOutputTag(string name);
+        bool RemoveOutputTag(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/RemoveOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/RemoveOutputTagResponse")]
-        System.Threading.Tasks.Task<bool> RemoveOutputTagAsync(string name);
+        System.Threading.Tasks.Task<bool> RemoveOutputTagAsync(string name, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTagsResponse")]
-        System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags();
+        System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetDigitalOutputTagsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTagsResponse")]
-        System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags();
+        System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTags", ReplyAction="http://tempuri.org/IDatabaseManagerService/GetAnalogOutputTagsResponse")]
-        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync();
+        System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync(string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTagResponse")]
-        bool ChangeValueDigitalOutputTag(string name, int newValue);
+        bool ChangeValueDigitalOutputTag(string name, int newValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueDigitalOutputTagResponse")]
-        System.Threading.Tasks.Task<bool> ChangeValueDigitalOutputTagAsync(string name, int newValue);
+        System.Threading.Tasks.Task<bool> ChangeValueDigitalOutputTagAsync(string name, int newValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTagResponse")]
-        bool ChangeValueAnalogOutputTag(string name, int newValue);
+        bool ChangeValueAnalogOutputTag(string name, int newValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ChangeValueAnalogOutputTagResponse")]
-        System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue);
+        System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue, string token);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTag", ReplyAction="http://tempuri.org/IDatabaseManagerService/ContainsAnalogInputTagResponse")]
         bool ContainsAnalogInputTag(string name);
@@ -193,11 +193,11 @@ namespace DatabaseManager.ServiceReference1 {
                 base(binding, remoteAddress) {
         }
         
-        public bool Registration(string username, string password) {
+        public string Registration(string username, string password) {
             return base.Channel.Registration(username, password);
         }
         
-        public System.Threading.Tasks.Task<bool> RegistrationAsync(string username, string password) {
+        public System.Threading.Tasks.Task<string> RegistrationAsync(string username, string password) {
             return base.Channel.RegistrationAsync(username, password);
         }
         
@@ -241,44 +241,44 @@ namespace DatabaseManager.ServiceReference1 {
             return base.Channel.CheckTagNameAsync(name);
         }
         
-        public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn) {
-            return base.Channel.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
+        public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, string token) {
+            return base.Channel.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn, token);
         }
         
-        public System.Threading.Tasks.Task<bool> AddDigitalInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn) {
-            return base.Channel.AddDigitalInputTagAsync(name, description, address, driver, scanTime, scanOn);
+        public System.Threading.Tasks.Task<bool> AddDigitalInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, string token) {
+            return base.Channel.AddDigitalInputTagAsync(name, description, address, driver, scanTime, scanOn, token);
         }
         
-        public bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units) {
-            return base.Channel.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units);
+        public bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units, string token) {
+            return base.Channel.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units, token);
         }
         
-        public System.Threading.Tasks.Task<bool> AddAnalogInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units) {
-            return base.Channel.AddAnalogInputTagAsync(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units);
+        public System.Threading.Tasks.Task<bool> AddAnalogInputTagAsync(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units, string token) {
+            return base.Channel.AddAnalogInputTagAsync(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units, token);
         }
         
-        public bool AddDigitalOutputTag(string name, string description, string address, int initialValue) {
-            return base.Channel.AddDigitalOutputTag(name, description, address, initialValue);
+        public bool AddDigitalOutputTag(string name, string description, string address, int initialValue, string token) {
+            return base.Channel.AddDigitalOutputTag(name, description, address, initialValue, token);
         }
         
-        public System.Threading.Tasks.Task<bool> AddDigitalOutputTagAsync(string name, string description, string address, int initialValue) {
-            return base.Channel.AddDigitalOutputTagAsync(name, description, address, initialValue);
+        public System.Threading.Tasks.Task<bool> AddDigitalOutputTagAsync(string name, string description, string address, int initialValue, string token) {
+            return base.Channel.AddDigitalOutputTagAsync(name, description, address, initialValue, token);
         }
         
-        public bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units) {
-            return base.Channel.AddAnalogOutputTag(name, description, address, initialValue, lowLimit, hightLimit, units);
+        public bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units, string token) {
+            return base.Channel.AddAnalogOutputTag(name, description, address, initialValue, lowLimit, hightLimit, units, token);
         }
         
-        public System.Threading.Tasks.Task<bool> AddAnalogOutputTagAsync(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units) {
-            return base.Channel.AddAnalogOutputTagAsync(name, description, address, initialValue, lowLimit, hightLimit, units);
+        public System.Threading.Tasks.Task<bool> AddAnalogOutputTagAsync(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units, string token) {
+            return base.Channel.AddAnalogOutputTagAsync(name, description, address, initialValue, lowLimit, hightLimit, units, token);
         }
         
-        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units) {
-            return base.Channel.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units);
+        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units, string token) {
+            return base.Channel.AddAnalogAlarm(tagName, id, type, priority, edgeValue, units, token);
         }
         
-        public System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units) {
-            return base.Channel.AddAnalogAlarmAsync(tagName, id, type, priority, edgeValue, units);
+        public System.Threading.Tasks.Task<bool> AddAnalogAlarmAsync(string tagName, int id, int type, int priority, double edgeValue, string units, string token) {
+            return base.Channel.AddAnalogAlarmAsync(tagName, id, type, priority, edgeValue, units, token);
         }
         
         public bool CheckAlarmId(int id) {
@@ -289,76 +289,76 @@ namespace DatabaseManager.ServiceReference1 {
             return base.Channel.CheckAlarmIdAsync(id);
         }
         
-        public bool TurnOnScan(string name) {
-            return base.Channel.TurnOnScan(name);
+        public bool TurnOnScan(string name, string token) {
+            return base.Channel.TurnOnScan(name, token);
         }
         
-        public System.Threading.Tasks.Task<bool> TurnOnScanAsync(string name) {
-            return base.Channel.TurnOnScanAsync(name);
+        public System.Threading.Tasks.Task<bool> TurnOnScanAsync(string name, string token) {
+            return base.Channel.TurnOnScanAsync(name, token);
         }
         
-        public bool TurnOffScan(string name) {
-            return base.Channel.TurnOffScan(name);
+        public bool TurnOffScan(string name, string token) {
+            return base.Channel.TurnOffScan(name, token);
         }
         
-        public System.Threading.Tasks.Task<bool> TurnOffScanAsync(string name) {
-            return base.Channel.TurnOffScanAsync(name);
+        public System.Threading.Tasks.Task<bool> TurnOffScanAsync(string name, string token) {
+            return base.Channel.TurnOffScanAsync(name, token);
         }
         
-        public bool RemoveInputTag(string name) {
-            return base.Channel.RemoveInputTag(name);
+        public bool RemoveInputTag(string name, string token) {
+            return base.Channel.RemoveInputTag(name, token);
         }
         
-        public System.Threading.Tasks.Task<bool> RemoveInputTagAsync(string name) {
-            return base.Channel.RemoveInputTagAsync(name);
+        public System.Threading.Tasks.Task<bool> RemoveInputTagAsync(string name, string token) {
+            return base.Channel.RemoveInputTagAsync(name, token);
         }
         
-        public bool RemoveAlarm(int id) {
-            return base.Channel.RemoveAlarm(id);
+        public bool RemoveAlarm(int id, string token) {
+            return base.Channel.RemoveAlarm(id, token);
         }
         
-        public System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id) {
-            return base.Channel.RemoveAlarmAsync(id);
+        public System.Threading.Tasks.Task<bool> RemoveAlarmAsync(int id, string token) {
+            return base.Channel.RemoveAlarmAsync(id, token);
         }
         
-        public bool RemoveOutputTag(string name) {
-            return base.Channel.RemoveOutputTag(name);
+        public bool RemoveOutputTag(string name, string token) {
+            return base.Channel.RemoveOutputTag(name, token);
         }
         
-        public System.Threading.Tasks.Task<bool> RemoveOutputTagAsync(string name) {
-            return base.Channel.RemoveOutputTagAsync(name);
+        public System.Threading.Tasks.Task<bool> RemoveOutputTagAsync(string name, string token) {
+            return base.Channel.RemoveOutputTagAsync(name, token);
         }
         
-        public System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags() {
-            return base.Channel.GetDigitalOutputTags();
+        public System.Collections.Generic.Dictionary<string, int> GetDigitalOutputTags(string token) {
+            return base.Channel.GetDigitalOutputTags(token);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync() {
-            return base.Channel.GetDigitalOutputTagsAsync();
+        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetDigitalOutputTagsAsync(string token) {
+            return base.Channel.GetDigitalOutputTagsAsync(token);
         }
         
-        public System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags() {
-            return base.Channel.GetAnalogOutputTags();
+        public System.Collections.Generic.Dictionary<string, int> GetAnalogOutputTags(string token) {
+            return base.Channel.GetAnalogOutputTags(token);
         }
         
-        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync() {
-            return base.Channel.GetAnalogOutputTagsAsync();
+        public System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, int>> GetAnalogOutputTagsAsync(string token) {
+            return base.Channel.GetAnalogOutputTagsAsync(token);
         }
         
-        public bool ChangeValueDigitalOutputTag(string name, int newValue) {
-            return base.Channel.ChangeValueDigitalOutputTag(name, newValue);
+        public bool ChangeValueDigitalOutputTag(string name, int newValue, string token) {
+            return base.Channel.ChangeValueDigitalOutputTag(name, newValue, token);
         }
         
-        public System.Threading.Tasks.Task<bool> ChangeValueDigitalOutputTagAsync(string name, int newValue) {
-            return base.Channel.ChangeValueDigitalOutputTagAsync(name, newValue);
+        public System.Threading.Tasks.Task<bool> ChangeValueDigitalOutputTagAsync(string name, int newValue, string token) {
+            return base.Channel.ChangeValueDigitalOutputTagAsync(name, newValue, token);
         }
         
-        public bool ChangeValueAnalogOutputTag(string name, int newValue) {
-            return base.Channel.ChangeValueAnalogOutputTag(name, newValue);
+        public bool ChangeValueAnalogOutputTag(string name, int newValue, string token) {
+            return base.Channel.ChangeValueAnalogOutputTag(name, newValue, token);
         }
         
-        public System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue) {
-            return base.Channel.ChangeValueAnalogOutputTagAsync(name, newValue);
+        public System.Threading.Tasks.Task<bool> ChangeValueAnalogOutputTagAsync(string name, int newValue, string token) {
+            return base.Channel.ChangeValueAnalogOutputTagAsync(name, newValue, token);
         }
         
         public bool ContainsAnalogInputTag(string name) {

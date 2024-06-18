@@ -11,7 +11,7 @@ namespace ScadaCore
     public class DatabaseManagerService : IDatabaseManagerService
     {
 
-        public bool Registration(string username, string password)
+        public string Registration(string username, string password)
         {
             return UserProcessing.Registration(username, password);
         }
@@ -47,78 +47,134 @@ namespace ScadaCore
             return TagProcessing.ContainsTag(name);
         }
 
-        public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn)
+        public bool AddDigitalInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, string token)
         {
-            return TagProcessing.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
+            if (UserProcessing.CheckToken(token))
+            {
+                return TagProcessing.AddDigitalInputTag(name, description, address, driver, scanTime, scanOn);
+            }
+            return false;
         }
 
-        public bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units)
+        public bool AddAnalogInputTag(string name, string description, string address, int driver, int scanTime, bool scanOn, int lowLimit, int hightLimit, string units, string token)
         {
-            return TagProcessing.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units);
+            if (UserProcessing.CheckToken(token))
+            {
+                return TagProcessing.AddAnalogInputTag(name, description, address, driver, scanTime, scanOn, lowLimit, hightLimit, units);
+            }
+            return false;
         }
 
-        public bool AddDigitalOutputTag(string name, string description, string address, int initialValue)
+        public bool AddDigitalOutputTag(string name, string description, string address, int initialValue, string token)
         {
-            return TagProcessing.AddDigitalOutputTag(name, description, address, initialValue);
+                if (UserProcessing.CheckToken(token))
+                {
+                    return TagProcessing.AddDigitalOutputTag(name, description, address, initialValue);
+            }
+            return false;
         }
 
-        public bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units)
+        public bool AddAnalogOutputTag(string name, string description, string address, int initialValue, int lowLimit, int hightLimit, string units, string token)
         {
-            return TagProcessing.AddAnalogOutputTag(name, description, address, initialValue, lowLimit, hightLimit, units);
+                    if (UserProcessing.CheckToken(token))
+                    {
+                        return TagProcessing.AddAnalogOutputTag(name, description, address, initialValue, lowLimit, hightLimit, units);
+            }
+            return false;
         }
 
-        public bool TurnOnScan(string name)
+        public bool TurnOnScan(string name, string token)
         {
-            return TagProcessing.TurnOnScan(name);    
+                        if (UserProcessing.CheckToken(token))
+                        {
+                            return TagProcessing.TurnOnScan(name);
+            }
+            return false;
         }
 
-        public bool TurnOffScan(string name)
+        public bool TurnOffScan(string name, string token)
         {
-            return TagProcessing.TurnOffScan(name);
+                            if (UserProcessing.CheckToken(token))
+                            {
+                                return TagProcessing.TurnOffScan(name);
+            }
+            return false;
         }
 
-        public bool RemoveInputTag(string name)
+        public bool RemoveInputTag(string name, string token)
         {
-            return TagProcessing.RemoveInputTag(name);
+                                if (UserProcessing.CheckToken(token))
+                                {
+                                    return TagProcessing.RemoveInputTag(name);
+            }
+            return false;
         }
 
-        public bool RemoveOutputTag(string name)
+        public bool RemoveOutputTag(string name, string token)
         {
-            return TagProcessing.RemoveOutputTag(name);
+                                    if (UserProcessing.CheckToken(token))
+                                    {
+                                        return TagProcessing.RemoveOutputTag(name);
+            }
+            return false;
         }
 
-        public bool RemoveAlarm(int id)
+        public bool RemoveAlarm(int id, string token)
         {
-            return TagProcessing.RemoveAlarm(id);
+                                        if (UserProcessing.CheckToken(token))
+                                        {
+                                            return TagProcessing.RemoveAlarm(id);
+            }
+            return false;
         }
 
-        public Dictionary<string, int> GetDigitalOutputTags()
+        public Dictionary<string, int> GetDigitalOutputTags(string token)
         {
-            return TagProcessing.GetDigitalOutputTags();
+                                            if (UserProcessing.CheckToken(token))
+                                            {
+                                                return TagProcessing.GetDigitalOutputTags();
+            }
+            return null;
         }
 
-        public Dictionary<string, int> GetAnalogOutputTags()
+        public Dictionary<string, int> GetAnalogOutputTags(string token)
         {
-            return TagProcessing.GetAnalogOutputTags();
+                                                if (UserProcessing.CheckToken(token))
+                                                {
+                                                    return TagProcessing.GetAnalogOutputTags();
+            }
+            return null;
         }
 
-        public bool ChangeValueDigitalOutputTag(string name, int newValue)
+        public bool ChangeValueDigitalOutputTag(string name, int newValue, string token)
         {
-            return TagProcessing.ChangeValueDigitalOutputTag(name, newValue);
+                                                    if (UserProcessing.CheckToken(token))
+                                                    {
+                                                        return TagProcessing.ChangeValueDigitalOutputTag(name, newValue);
+            }
+            return false;
         }
 
-        public bool ChangeValueAnalogOutputTag(string name, int newValue)
+        public bool ChangeValueAnalogOutputTag(string name, int newValue, string token)
         {
-            return TagProcessing.ChangeValueAnalogOutputTag(name, newValue);
+                                                        if (UserProcessing.CheckToken(token))
+                                                        {
+                                                            return TagProcessing.ChangeValueAnalogOutputTag(name, newValue);
+            }
+            return false;
         }
 
-        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units)
+        public bool AddAnalogAlarm(string tagName, int id, int type, int priority, double edgeValue, string units, string token)
         {
-            if (!CheckAlarmId(id))
+                                                            if (UserProcessing.CheckToken(token))
+                                                            {
+                                                                if (!CheckAlarmId(id))
             {
                 AlarmType alarmType = type == 1 ? AlarmType.HIGH : AlarmType.LOW;
                 TagProcessing.AddAnalogAlarm(tagName, id, alarmType, priority, edgeValue, units);
                 return true;
+            }
+            return false;
             }
             return false;
         }
