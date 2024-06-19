@@ -1590,7 +1590,7 @@
       <wsa10:EndpointReference>
         <wsa10:Address>http://localhost:49357/DatabaseManagerService.svc/DatabaseManager</wsa10:Address>
         <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
-          <Upn>DESKTOP-L1KE4B2\computer</Upn>
+          <Upn>DESKTOP-OU2I46P\dunja</Upn>
         </Identity>
       </wsa10:EndpointReference>
     </wsdl:port>
